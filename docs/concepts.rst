@@ -37,5 +37,5 @@ Glossary
 * **base token**: Also referred to as base coin of the Desk is the token that can be lent out by the desk and is the numeraire for all calculated values.
 * **horizon**: The horizon of a loan is the number of blocks until the loan expires and must be repaid, extended or liquidated.
 * **longable**: Tokens that are accepted in a Desk in exchange for loans are called longable tokens in reference to traders/borrowers being long those tokens and short the base token.
-* **provider**: The Crayon Protocol team will not build a front end. Rather, third parties are incentivized to build interfaces by allowing them to keep a percentage of the reward tokens earned by their users. Some interactions with the Crayon Protocol, such as leveraged trading, require smart contract deployments. Providers are also incentivized to facilitate that. 
+* **provider**: The Crayon Protocol team will not build a front end. Rather, third parties are incentivized to build interfaces by allowing them to keep a percentage of the reward tokens earned by their users. Some interactions with the Crayon Protocol, such as trade leveraging, require smart contract deployments. Providers are also incentivized to facilitate that. 
 

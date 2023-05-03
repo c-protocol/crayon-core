@@ -4,7 +4,7 @@ Vyper contracts implementing the Crayon Protocol.
 
 ## Overview
 
-Crayon is a lending, leveraged trading and financing protocol on Ethereum and EVM-compatible blockchains.
+Crayon is a lending, trade leveraging and financing protocol on Ethereum and EVM-compatible blockchains.
 
 Users interact mainly with Crayon Desks. A Crayon Desk specifies a base token that lenders deposit and tokens that are accepted as collateral for loans that we refer to as longables. The base token must also be the numeraire. Therefore oracles used by the desk must express prices in units of base token.
 

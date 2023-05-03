@@ -11,7 +11,7 @@ Traditional DeFi lending protocols have tended to favor new participants in the 
 Crayon Protocol makes it possible for lenders to reserve funds for future withdrawal if current liquidity does not allow it.
 
 
-Main advantages to leveraged trading
+Main advantages to trade leveraging
 ====================================
 
 Traditional DeFi lending protocols expose borrowers to variable and unpredictable interest rates on their loans. PnL from certain leveraged trades can be highly dependent on the interest rate. In addition, the main DeFi lending protocols require multiple transactions, sometimes across multiple platforms, for a leveraged position to be created. With Crayon Protocol, a leveraged trade can be created for a fixed fee in a single transaction that borrows funds, buys the desired (approved) tokens, and deposits them in the pool as collateral. It's similar to a flashloan except that at the end of the transaction, instead of returning the borrowed funds, other tokens (from an approved list) can be deposited.
@@ -21,7 +21,7 @@ Tokens deposited by borrowers are available for traditional flashloans allowing 
 Main advantages to asset financing
 ==================================
 
-Unlike leveraged trading, asset financing assumes the assets are already held by the borrower who wishes to obtain a loan. Crayon Protocol allows a more "repo-style" asset financing than traditional DeFi. Existing assets can be posted as collateral for a loan in some base token but, unlike traditional DeFi protocols, Crayon Protocol fixes the fee and the expiration date of the loan. This, again, allows for better cost predictions or PnL projections, depending on how the loan is used.
+Unlike trade leveraging, asset financing assumes the assets are already held by the borrower who wishes to obtain a loan. Crayon Protocol allows a more "repo-style" asset financing than traditional DeFi. Existing assets can be posted as collateral for a loan in some base token but, unlike traditional DeFi protocols, Crayon Protocol fixes the fee and the expiration date of the loan. This, again, allows for better cost predictions or PnL projections, depending on how the loan is used.
 
 Interaction with the protocol
 =============================
