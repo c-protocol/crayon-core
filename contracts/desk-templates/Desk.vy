@@ -195,7 +195,7 @@ def __init__(
     @param _longables The addresses of the ERC20 tokens that can be posted as collateral for loans
     @param _longable_decimals The decimals corresponding to _longables
     @param _oracles The Chainlink oracles to be used to obtain prices for the tokens accepted as longable
-    @param _control_contract The address of the C Control contract
+    @param _control_contract The address of the Control contract
     @param _value_to_loan_ratio The minimum the ratio in percent of the value of the posted collateral to the value of a loan can be before the account is subject to liquidation
     @param _flashloan_fee The fee in basis points (0.01%) of a flash loan to be paid by borrowers
     @param _liquidation_bonus The discount in bps applied to longable being acquired by liquidator
@@ -914,7 +914,10 @@ def _send_borrow_snapshot(
 def _flash_fee(
     _amount: uint256
 ) -> uint256:
-    return _amount * self.flashloan_fee / 10000
+    ret : uint256 = _amount * self.flashloan_fee / 10000
+    assert ret > 0
+
+    return ret
 
 @internal
 @view
@@ -922,7 +925,10 @@ def _borrow_fee(
     _amount: uint256,
     _applicable_fee: uint256
 ) -> uint256:
-    return _amount * _applicable_fee / 10000
+    ret : uint256 = _amount * _applicable_fee / 10000
+    assert ret > 0
+    
+    return ret
     
 @external
 def set_fee(

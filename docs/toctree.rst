@@ -55,4 +55,14 @@ Crayon Protocol
 
     providers.rst
    
+.. toctree::
+    :caption: Governance
+    :maxdepth: 2
 
+    governance.rst
+   
+.. toctree::
+    :caption: Roadmap
+    :maxdepth: 2
+
+    roadmap.rst

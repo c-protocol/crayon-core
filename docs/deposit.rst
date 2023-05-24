@@ -14,6 +14,10 @@ Users deposit the desk's base token using the ``deposit`` function.
     * ``_amount``: Amount of base coin being deposited
     * ``_provider``: For use by front-end providers, if applicable
 
+.. note::
+
+    Users who use a smart contract to make their deposit, can then flashloan up to their full deposit with no fee if the same smart contract is used for the flashloan. See :ref:`Flashloan <flashloan>`.
+
 .. py:function:: balanceOf(_user : address) -> uint256
 
     Returns the base token balance of a user. This is a ``view`` function.

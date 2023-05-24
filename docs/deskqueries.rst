@@ -25,7 +25,7 @@ A number of functions can be called to retrieve information about a desk's attri
 
 .. py:function:: control_contract() -> address
 
-    Returns the address of the C Control smart contract that controls some of the settings in this desk.
+    Returns the address of the ``Control`` smart contract that controls some of the settings in this desk.
 
 .. py:function:: horizons(_horizon : uint256) -> uint256
 

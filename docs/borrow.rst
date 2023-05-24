@@ -21,7 +21,7 @@ The two functions available for borrowing are:
     * ``_longable_amount``: The amount of longable to be posted against the loan at the end of the transaction
     * ``_horizon``: If a new loan, the loan expires at the block height _horizon blocks hence
     * ``_contract``: The address of the smart contract receiving the loan and that will also provide the required _longable_amount of the longable token
-    * ``data``: Opaque calldata to be passed to the contract receiving the loan
+    * ``data``: Opaque calldata to be passed to the smart contract receiving the loan
     * ``_provider``: For use by third-party, front-end provider if applicable. Use default otherwise
 
 .. note::
@@ -38,11 +38,15 @@ The two functions available for borrowing are:
     * ``_horizon``: If a new loan, the loan expires at the block height _horizon blocks hence
     * ``_provider``: For use by third-party, front-end provider if applicable. Use default otherwise
 
+.. note::
+
+    The two borrowing functions will revert if the loan amount is so small the internally calculated borrowing fee is 0.
+
 Users can call this function to determine the cost of borrowing:
 
 .. py:function:: borrow_fee(_amount: uint256, _longable: address, _horizon: uint256, _is_extend : bool = False) -> uint256
 
-    Return the fee that will be charged for the loan. This is a ``view`` function
+    Return the fee that will be charged for the loan. This is a ``view`` function.
 
     * ``_amount``: The (new) amount to be borrowed. This is ignored if ``_is_extend = True``
     * ``_longable``: The token that will be deposited against the loan
@@ -89,7 +93,7 @@ Two functions can be used to manage an existing loan in order to maintain the mi
 
     * ``_longable_amount``: Amount of longable being deposited
     * ``_longable``: ERC20 token address to use as longable
-    * ``longable_owner``: Optional. Address to be credited for longable. This can be a borrowing contract. 
+    * ``longable_owner``: Optional. Address to be credited for longable. This can be a borrowing smart contract. 
 
 .. note::
 
@@ -119,25 +123,28 @@ Two functions can be used to manage an existing loan in order to maintain the mi
 
 .. _borrower_sample:
 
-Sample Borrow Contract
-======================
+Template Borrow Contracts
+=========================
+
+Smart contracts deployed by leveraged traders can follow these two templates. The first is written in Vyper and the second in Solidity.
+
 
 .. code-block:: python
-    
+
     # @version ^0.3.7
 
     from vyper.interfaces import ERC20
 
-    256: constant(int128) = 256
+    MAX_DATA_LENGTH: constant(int128) = 256
 
-    interface LongDesk:
+    interface CrayonDesk:
         def borrow_then_post_longable(
             _amount: uint256,
             _longable: address,
             _longable_amount: uint256,
             _horizon: uint256,
             _contract: address,
-            data: Bytes[256],
+            data: Bytes[MAX_DATA_LENGTH],
             _provider: address = empty(address)
         ): nonpayable
 
@@ -146,7 +153,7 @@ Sample Borrow Contract
             _longable: address,
             _longable_amount: uint256,
             _contract: address,
-            data: Bytes[256],
+            data: Bytes[MAX_DATA_LENGTH],
             _provider: address = empty(address)
         ): nonpayable
 
@@ -165,10 +172,6 @@ Sample Borrow Contract
         ): nonpayable
 
         def token_contract() -> address: view
-
-    interface Oracle:
-        def latestRoundData() -> (uint80, int256, uint256, uint256, uint80): view
-        def decimals() -> uint8: view
 
     enum Action:
         buy
@@ -189,10 +192,10 @@ Sample Borrow Contract
         _initiator: address,
         _token: address,
         _amount: uint256,
-        data: Bytes[256]
+        data: Bytes[MAX_DATA_LENGTH]
     ) -> bytes32:
         """
-        @dev Callback function used by desk when contract calls borrow_then_post_longable() or withdraw_longable_then_repay()
+        @dev Callback function used by desk when smart contract calls borrow_then_post_longable() or withdraw_longable_then_repay()
         @param _initiator The contract initiating the call
         @param _token The desk's base coin
         @param _amount The amount of tokens the desk transferred to this contract
@@ -222,7 +225,6 @@ Sample Borrow Contract
         _horizon: uint256,
         _longable_token: address,
         _longable_amount: uint256,
-        _longable_oracle: address,
         _provider: address
     ):
         """
@@ -237,12 +239,12 @@ Sample Borrow Contract
         assert msg.sender == self.owner
 
         # bespoke logic. we want to use the borrowed base coin to buy the longable token that we then post as collateral
-        data : Bytes[256] = _abi_encode(Action.buy)
+        data : Bytes[MAX_DATA_LENGTH] = _abi_encode(Action.buy)
 
         # check how much borrower was already approved for
         allowance : uint256 = ERC20(_longable_token).allowance(self, self.desk)
-        ERC20(_longable_token).approve(self.desk, allowance + _longable_amount)
-        LongDesk(self.desk).borrow_then_post_longable(_amount, _longable_token, _longable_amount, _horizon, self, data, _provider)
+        assert ERC20(_longable_token).approve(self.desk, allowance + _longable_amount)
+        CrayonDesk(self.desk).borrow_then_post_longable(_amount, _longable_token, _longable_amount, _horizon, self, data, _provider)
 
     @external
     def repay(
@@ -261,31 +263,204 @@ Sample Borrow Contract
         longable_amount : uint256 = 0
         expiration : uint256 = max_value(uint256)
         # get loan position of this contract
-        amount, longable_amount, expiration = LongDesk(self.desk).loanOf(self, _longable_token)
+        amount, longable_amount, expiration = CrayonDesk(self.desk).loanOf(self, _longable_token)
 
-        borrow_token : address = LongDesk(self.desk).base_coin()
+        borrow_token : address = CrayonDesk(self.desk).base_coin()
         allowance : uint256 = ERC20(borrow_token).allowance(self, self.desk)
         assert ERC20(borrow_token).approve(self.desk, allowance + amount)
 
         # bespoke logic. we want to sell the withdrawn collateral to generate the funds to pay back the loan
-        data : Bytes[256] = _abi_encode(Action.sell)
+        data : Bytes[MAX_DATA_LENGTH] = _abi_encode(Action.sell)
 
         # pay back the full loan
-        LongDesk(self.desk).withdraw_longable_then_repay(amount, _longable_token, longable_amount, self, data, _provider)
+        CrayonDesk(self.desk).withdraw_longable_then_repay(amount, _longable_token, longable_amount, self, data, _provider)
 
     @external
     def mint(
         _is_transferring : bool = False
     ):
         """
-        @dev Mint the XCRAY reward tokens that have accumulated to this contract
+        @dev Mint the XCRAY reward tokens that have accumulated to this smart contract
         @param _is_transferring Optional parameter. True means transfer minted tokens to owner. Default is False
         """
 
         # One way to do it...
-        control_contract : address = LongDesk(self.desk).control_contract()
+        control_contract : address = CrayonDesk(self.desk).control_contract()
         c_control : C_Control = C_Control(control_contract)
         c_control.mint_all_reward_token(self)
         if _is_transferring:
             xcToken : ERC20 = ERC20(c_control.token_contract())
             xcToken.transfer(self.owner, xcToken.balanceOf(self))
+
+
+And a template for Solidity traders:
+
+.. code-block:: javascript
+
+    // SPDX-License-Identifier: MIT
+
+    pragma solidity=0.8.19;
+
+    interface IErc20 {
+        function allowance(address _from, address _to) external view returns(uint256);
+        function transfer(address _to, uint _amount) external returns(bool success);
+        function approve(address _to, uint _amount) external returns(bool success);
+        function balanceOf(address _from) external view returns(uint256);
+    }
+
+    interface CrayonDesk {
+        function borrow_then_post_longable(
+            uint256 _amount,
+            address _longable,
+            uint256 _longable_amount,
+            uint256 _horizon,
+            address _contract,
+            bytes calldata data,
+            address _provider) external;
+
+        function withdraw_longable_then_repay(
+            uint256 _amount,
+            address _longable,
+            uint256 _longable_amount,
+            address _contract,
+            bytes calldata data,
+            address _provider) external;
+
+        function base_coin() external view returns(address);
+        
+        function loanOf(
+            address _user,
+            address _longable) external view returns(uint256, uint256, uint256);
+
+        function control_contract() external view returns(address);
+    }
+
+
+    interface C_Control {
+        function mint_all_reward_token(
+            address _user
+        ) external;
+
+        function token_contract() external view returns(address);
+    }
+
+
+    contract BorrowerS {
+        enum Action{ BUY, SELL }
+
+        address desk;
+        address owner;
+
+        constructor(address _desk) {
+
+            /*
+             * _desk is the desk from which we want to borrow
+             */
+            
+            desk = _desk;
+            owner = msg.sender;
+        }
+
+        function on_bridge_loan(
+            address _initiator,
+            address _token,
+            uint256 _amount,
+            bytes calldata data
+        ) external returns(bytes32) {
+            /**
+             * @dev Callback function used by desk when smart contract calls flashloan()
+             * @param _initiator The contract initiating the call
+             * @param _token The token this contract is borrowing
+             * @param _amount The amount of _token the desk transferred to this contract
+             * @param _fee The fee for the flash loan. It's 0 if contract borrowed from its own deposit or its own collateral
+             * @param data Data that was initially built by this contract and that, for example, contains actions upon callback
+             */
+
+            require(msg.sender == desk);
+            require(_initiator == address(this));
+
+            (Action action) = abi.decode(data, (Action));
+
+            if (action == Action.BUY) {
+                // enter position: for example, write the code to acquire the longable tokens
+            } else if (action == Action.SELL) {
+                // exit position: for example, write the code to swap the longable tokens for base tokens
+            } else {
+                revert("on_bridge_loan(): unknown action");
+            }
+
+
+            return keccak256("IBridgeBorrower.on_bridge_loan");
+        }
+
+        function borrow(
+            uint256 _amount,
+            uint256 _horizon,
+            address _longable_token,
+            uint256 _longable_amount,
+            address _provider) external {
+            /**
+             * @dev Borrow base coin and post longable satisfying value_to_loan_ratio in one transaction
+             * @param _amount The number of base_coin tokens to be borrowed
+             * @param _horizon The horizon for this loan, i.e., the period for which the loan is desired. Must be one of the acceptable horizons
+             * @param _longable_token The address of the ERC20 token that will be posted. Must be one of the acceptable longable tokens
+             * @param _longable_amount The amount of longable to be posted against the loan at the end of the transaction
+             * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
+             */
+
+            require(msg.sender == owner);
+
+            bytes memory data = abi.encode((Action.BUY));
+
+            uint256 allowance = IErc20(_longable_token).allowance(address(this), desk);
+            require(IErc20(_longable_token).approve(desk, allowance + _longable_amount));
+            CrayonDesk(desk).borrow_then_post_longable(_amount, _longable_token, _longable_amount, _horizon, address(this), data, _provider);
+        }
+
+        function repay(
+            address _longable_token,
+            address _provider) external {
+            /**
+             * @dev Withdraw token posted as collateral and repay part/all of the loan in one transaction
+             * @param _longable_token The address of the ERC20 token that was posted
+             * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
+             */
+
+            require(msg.sender == owner);
+
+            uint256 amount = 0;
+            uint256 longable_amount = 0;
+            uint256 expiration = type(uint256).max;
+            // get loan position of this contract
+            (amount, longable_amount, expiration) = CrayonDesk(desk).loanOf(address(this), _longable_token);
+
+            address borrow_token = CrayonDesk(desk).base_coin();
+            uint256 allowance = IErc20(borrow_token).allowance(address(this), desk);
+            require(IErc20(borrow_token).approve(desk, allowance + amount));
+
+            // bespoke logic. we want to sell the withdrawn collateral to generate the funds to pay back the loan
+            bytes memory data = abi.encode(Action.SELL);
+
+            // pay back the full loan
+            CrayonDesk(desk).withdraw_longable_then_repay(amount, _longable_token, longable_amount, address(this), data, _provider);
+        }
+
+        function mint(
+            bool _is_transferring
+        ) external {
+            /**
+             * @dev Mint the XCRAY reward tokens that have accumulated to this smart contract
+             * @param _is_transferring Optional parameter. True means transfer minted tokens to owner
+             */
+
+            // One way to do it...
+            address control_contract = CrayonDesk(desk).control_contract();
+            C_Control c_control = C_Control(control_contract);
+            c_control.mint_all_reward_token(address(this));
+            if (_is_transferring) {
+                IErc20 xcToken = IErc20(c_control.token_contract());
+                xcToken.transfer(owner, xcToken.balanceOf(address(this)));
+            }
+        }
+    }
+

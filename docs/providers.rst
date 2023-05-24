@@ -8,7 +8,7 @@ Providers
 
 The Crayon Protocol team decided to leave it to third parties to build front-ends to access the protocol's desks. Providers are incentivized by letting them specify and keep a percentage of reward tokens earned by their users. When minting reward tokens for a user, the protocol awards that percentage of the rewards to the provider the user used.
 
-The following functions in the C Control smart contract are available for provider interaction.
+The following functions in the ``Control`` smart contract are available for provider interaction.
 
 .. py:function:: register_provider(_provider_percentage: uint256)
 

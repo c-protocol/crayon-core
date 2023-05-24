@@ -1,6 +1,6 @@
 import pytest
 
-from brownie import Desk, XCToken, Control, ERC20Token, Oracle, Borrower, Flashborrower
+from brownie import Desk, XCToken, Control, ERC20Token, Oracle, BorrowerS, FlashborrowerS
 
 @pytest.fixture
 def erc20token_admin(accounts):
@@ -31,6 +31,10 @@ def create_oracle(erc20token_admin):
 @pytest.fixture
 def base_token(create_token):
     yield create_token(decimals=18)
+
+@pytest.fixture
+def base_token2(create_token):
+    yield create_token(decimals=8)
 
 @pytest.fixture
 def longable1(create_token):
@@ -116,6 +120,24 @@ def long_desk(base_token, control_contract, longables, oracles, horizons, borrow
     )
 
 @pytest.fixture
+def second_desk(base_token2, control_contract, longables, oracles, horizons, borrow_fees, accounts):
+    longable_decimals = [18, 12, 6, 2]
+    yield accounts.add().deploy(
+        Desk,
+        base_token2,
+        8,
+        longables,
+        longable_decimals,
+        oracles,
+        control_contract,
+        130,
+        9,
+        500,
+        horizons,
+        borrow_fees
+    )
+
+@pytest.fixture
 def provider1(accounts):
     yield accounts.add()
 
@@ -157,19 +179,20 @@ def flashborrower(accounts):
 
 @pytest.fixture
 def contract_borrower1(borrower1, long_desk):
-    yield borrower1.deploy(Borrower, long_desk)
+    yield borrower1.deploy(BorrowerS, long_desk)
 
 @pytest.fixture
 def contract_borrower2(borrower2, long_desk):
-    yield borrower2.deploy(Borrower, long_desk)
+    yield borrower2.deploy(BorrowerS, long_desk)
 
 @pytest.fixture
 def contract_flashborrower(flashborrower, long_desk):
-    yield flashborrower.deploy(Flashborrower, long_desk)
+    yield flashborrower.deploy(FlashborrowerS, long_desk)
 
 @pytest.fixture(autouse=True)
-def c_control(control_contract, long_desk, control_admin, provider1, provider2):
+def c_control(control_contract, long_desk, second_desk, control_admin, provider1, provider2):
     control_contract.register_desk(long_desk, 5e26, 5e26, {'from': control_admin})
+    control_contract.register_desk(second_desk, 4e26, 4e26, {'from': control_admin})
     control_contract.register_provider(2, {'from': provider1})
     control_contract.register_provider(5, {'from': provider2})
     yield control_contract

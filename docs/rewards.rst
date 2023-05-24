@@ -5,9 +5,9 @@
 Rewards
 #######
 
-Depositors (lenders) and borrowers in Crayon Protocol are rewarded with the ``XCRAY`` token. Accumulated rewards can be claimed from the Crayon Protocol Control contract.
+Depositors (lenders) and borrowers in Crayon Protocol are rewarded with the ``XCRAY`` token. Accumulated rewards can be claimed from the Crayon Protocol ``Control`` contract.
 
-The following functions in the C Control smart contract support the reward token, including minting activities.
+The following functions in the ``Control`` smart contract support the reward token, including minting activities.
 
 .. py:function:: mint_all_reward_token(_user: address)
     

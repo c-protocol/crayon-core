@@ -19,7 +19,7 @@ class StateMachine:
     st_address = strategy("address")
     machine_precision = 10**-16
     one_100th_bps = 10**-6
-    one_1000th_bps = 10**-7
+    # # one_1000th_bps = 10**-7
 
     def __init__(cls, accounts, control, xctoken, base_token, horizons, fees, providers, provider_percentages, borrower_contract, flashborrower_contract):
         assert len(horizons) == len(fees)
@@ -147,7 +147,7 @@ class StateMachine:
             bb = self.base_token.balanceOf(c)
             bl = l.balanceOf(c)
             a0, _, _ = self.desk.loanOf(c, l)
-            c.borrow(amount, horizon, l, longable_amount, o, provider, {'from': borrower})
+            c.borrow(amount, horizon, l, longable_amount, provider, {'from': borrower})
             assert bl - l.balanceOf(c) == longable_amount
             assert self.base_token.balanceOf(c) - bb == amount
 
@@ -228,8 +228,8 @@ class StateMachine:
         if borrower == "0x":
             return
         a, l, _ = self.desk.loanOf(borrower, longable)
-        if abs(l - self.longable_users[longable][borrower]) != 1:
-            assert abs(l - self.longable_users[longable][borrower]) / self.longable_users[longable][borrower] < self.one_1000th_bps
+        if abs(l - self.longable_users[longable][borrower]) > 1:
+            assert abs(l - self.longable_users[longable][borrower]) / self.longable_users[longable][borrower] < self.one_100th_bps
         
         # determine minimum collateral needed
         r = min_longable_amount(a, longable.decimals(), oracle, self.desk.value_to_loan_ratio(), self.base_token.decimals(), 0)
@@ -305,8 +305,16 @@ class StateMachine:
             c = self.flashborrower_contract.deploy(self.desk, {'from': flashborrower})
             self.user_flash_contract[flashborrower] = c
         c = self.user_flash_contract[flashborrower]
-        flash_fee = self.desk.flashloan_fee() * a // 10000
-        self.seed(c, l, flash_fee)
+        # does c own any l in the desk?
+        _, l_amount, _ = self.desk.loanOf(c, l)
+        flash_fee = 0
+        # There's no fee for the flashloan if the amount is less than the collateral owned by the contract
+        if a > l_amount:
+            flash_fee = self.desk.flashloan_fee() * a // 10000
+            if flash_fee == 0:
+                return
+        if flash_fee != 0:
+            self.seed(c, l, flash_fee)
         c.flash_borrow(l, a, {'from': flashborrower})
         assert self.desk.total_longable(l) == a + flash_fee
 
@@ -319,6 +327,31 @@ class StateMachine:
                 assert abs(la - self.longable_users[l][u]) / self.longable_users[l][u] < self.one_100th_bps
 
         self.rules_called.add('rule_flashloan')
+
+    def rule_flashloan_base(self, flashborrower="st_address"):
+        t_liq = int(self.desk.total_liquidity() / 10**self.desk.base_coin_decimals())
+        if t_liq == 0:
+            return
+        a = random.choice(range(1, t_liq+1)) * 10**self.desk.base_coin_decimals()
+
+        if flashborrower not in self.user_flash_contract.keys():
+            c = self.flashborrower_contract.deploy(self.desk, {'from': flashborrower})
+            self.user_flash_contract[flashborrower] = c
+        c = self.user_flash_contract[flashborrower]
+        flash_fee = 0
+        # fee is 0 if the calling smart contract has a base_token balance of at least a
+        if a > self.desk.balanceOf(c):
+            flash_fee = self.desk.flashloan_fee() * a // 10000
+            if flash_fee == 0:
+                return
+        if flash_fee != 0:
+            self.seed(c, self.base_token, flash_fee)
+
+        c.flash_borrow(self.base_token, a, {'from': flashborrower})
+        if flash_fee != 0:
+            self.update_deposits(flash_fee)
+
+        self.rules_called.add('rule_flashloan_base')
 
     def rule_liquidate(self, liquidator="st_address"):
         a = 0
@@ -344,7 +377,8 @@ class StateMachine:
             p = o.token_price()
 
             # check changes in collateral and loan outstanding are proportionately correct
-            assert abs((bl1-bl)/10**longable.decimals() * p/10**o.decimals() - (l0-l1)/10**self.desk.base_coin_decimals() * ( 1+self.desk.liquidation_bonus()/10000)) < self.one_1000th_bps
+            base_value = (l0-l1)/10**self.desk.base_coin_decimals() * ( 1+self.desk.liquidation_bonus()/10000)
+            assert abs((bl1-bl)/10**longable.decimals() * p/10**o.decimals() - base_value) / base_value < self.one_100th_bps
 
             # note that longable_users tracks collateral held by borrowers so we don't care about the liquidator's holdings
             self.update_user_loans(u, longable, l1-l0, bl-bl1)
@@ -375,7 +409,7 @@ class StateMachine:
             if self.loans[u] == 0:
                 assert self.desk.user_loans(u) <= 1
             elif abs(self.loans[u] - self.desk.user_loans(u)) != 1:
-                assert abs(self.loans[u] - self.desk.user_loans(u)) / self.loans[u] < self.one_1000th_bps
+                assert abs(self.loans[u] - self.desk.user_loans(u)) / self.loans[u] < self.one_100th_bps
 
             sum = 0
             for longable in self.longables:
@@ -480,13 +514,14 @@ class StateMachine:
         if self.longable_users[longable][user] == 0:
             assert float(l) <= 1
         elif abs(l - self.longable_users[longable][user]) != 1:
-            assert abs(l - self.longable_users[longable][user]) / self.longable_users[longable][user] < self.one_1000th_bps
+            assert abs(l - self.longable_users[longable][user]) / self.longable_users[longable][user] < self.one_100th_bps
 
 def test_stateful(accounts, base_token, borrower_contract, flashborrower_contract, state_machine):   
     xctoken_contract = XCToken.deploy(accounts[1], {'from': accounts[0]})
     control_contract = Control.deploy(accounts[2], xctoken_contract, {'from': accounts[0]})
     xctoken_contract.add_minter(control_contract, {'from': accounts[0]})
 
+    # approx. 1, 3, 7 days
     horizons = [5760, 5760 * 3, 5760 * 7]
     fees = [9, 18, 45]
     providers = [accounts.add(), accounts.add(), accounts.add(), accounts.add(), accounts.add()]

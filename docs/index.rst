@@ -10,13 +10,15 @@ Traditional DeFi lending protocols have tended to favor new participants in the 
 
 Crayon Protocol makes it possible for lenders to reserve funds for future withdrawal if current liquidity does not allow it.
 
+Deposits are available for traditional flashloans. A flashloan requires the deployment of a smart contract. A smart contract can flashloan up to the full balance of its base token deposit for no fee.
+
 
 Main advantages to trade leveraging
 ====================================
 
 Traditional DeFi lending protocols expose borrowers to variable and unpredictable interest rates on their loans. PnL from certain leveraged trades can be highly dependent on the interest rate. In addition, the main DeFi lending protocols require multiple transactions, sometimes across multiple platforms, for a leveraged position to be created. With Crayon Protocol, a leveraged trade can be created for a fixed fee in a single transaction that borrows funds, buys the desired (approved) tokens, and deposits them in the pool as collateral. It's similar to a flashloan except that at the end of the transaction, instead of returning the borrowed funds, other tokens (from an approved list) can be deposited.
 
-Tokens deposited by borrowers are available for traditional flashloans allowing borrowers to earn additional fees.
+Tokens deposited by borrowers are available for traditional flashloans allowing borrowers to earn additional fees. Smart contracts can flashloan up to the full amount of their own collateral for no fee.
 
 Main advantages to asset financing
 ==================================
@@ -35,7 +37,8 @@ Features
 * **Locked-in fees**: Borrowers pay the fee for the loan up-front, allowing existing lenders to lock the full gain from their participation.
 * **Leveraging**: Traders can create leveraged positions in one transaction that borrows, buys approved tokens and deposits them in the protocol.
 * **Predictable PnL for leveraged trades**: Traders can figure out exactly the cost of their leveraged trades.
-* **Rewards**: XCRAY, a limited supply token, is awarded to lenders and borrowers.
+* **Rewards**: ``XCRAY``, a limited supply token, is awarded to lenders and borrowers.
+* **All fees go to users**: Lenders receive 100% of fees paid by borrowers and base token flashborrowers. Borrowers receive 100% of fees paid by flashborrowers of the token they used as collateral.
 
 Contracts
 =========

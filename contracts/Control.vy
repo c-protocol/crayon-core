@@ -34,18 +34,18 @@ event NewAdmin:
     new_admin: address
 
 event NewFee:
-    desk: address
-    horizon: uint256
+    desk: indexed(address)
+    horizon: indexed(uint256)
     new_fee: uint256
     from_block: uint256
 
 event NewFlashFee:
-    desk: address
+    desk: indexed(address)
     new_flash_fee: uint256
     from_block: uint256
 
 event NewLiquidationBonus:
-    desk: address
+    desk: indexed(address)
     new_liquidation_bonus: uint256
     from_block: uint256
 
@@ -63,12 +63,8 @@ struct Snapshot:
     provider: address
 
 struct New_desk_setting:
+    is_active: bool
     setting: uint256
-    from_block: uint256
-
-struct New_desk_fee:
-    horizon: uint256
-    fee: uint256
     from_block: uint256
 
 is_c_control: public(bool)
@@ -82,7 +78,7 @@ is_registered_desk: public(HashMap[address, bool])
 desk_rates: HashMap[address, DeskRates]
 
 # desk updates
-new_desk_fee: HashMap[address, New_desk_fee]
+new_desk_fee: HashMap[address, HashMap[uint256, New_desk_setting]]
 new_desk_flashloan_fee: HashMap[address, New_desk_setting]
 new_desk_liquidation_bonus: HashMap[address, New_desk_setting]
 
@@ -148,32 +144,6 @@ def unregister_desk(
 
     self.is_registered_desk[_desk] = False
     self.num_desks -= 1
-    
-@external
-def set_desk_rates(
-    _desks: DynArray[address, MAX_NUM_DESKS],
-    _borrow_rates: DynArray[uint256, MAX_NUM_DESKS],
-    _deposit_rates: DynArray[uint256, MAX_NUM_DESKS]
-):
-    """
-    @dev Set new XCRAY award rates for all registered desks. _borrow_rates[i] and _deposit_rates[i] apply to _desks[i]
-    @param _desks The array containing all registered desks. Must contain all registered desks
-    @param _borrow_rates Array containing the total amount of XCRAY to be awarded to borrowers
-    @param _deposit_rates Array containing the total amount of XCRAY to be awarded to depositors 
-    """
-    
-    assert msg.sender == self.admin
-
-    _num_desks : uint256 = len(_desks)
-    assert _num_desks == self.num_desks and _num_desks == len(_borrow_rates) and _num_desks == len(_deposit_rates)
-
-    # some acrobatics to meet vyper's limitations. conversion is safe since _num_desks <= MAX_NUM_DESKS <= max_value(int128). argument to range() has to be a literal, hence the if statement in the loop
-    count : int128 = convert(_num_desks, int128)
-    for i in range(MAX_NUM_DESKS):
-        if i == count:
-            break
-        assert self.is_registered_desk[_desks[i]] == True
-        self.desk_rates[_desks[i]] = DeskRates({borrow_rate: _borrow_rates[i], deposit_rate: _deposit_rates[i]})
 
 @external
 def register_provider(
@@ -226,20 +196,6 @@ def provider_percentage(
     """
 
     return self.providers[_provider].percentage
-
-@external
-@view
-def get_reward_parameters(
-    _desk: address
-) -> (uint256, uint256):
-    """
-    @notice Return the amount of reward tokens distributed to borrowers and depositors per block
-    @param _desk The desk whose reward parameters are sought
-    @return Tuple: first component is borrower rate, second is depositor rate
-    """
-
-    rates: DeskRates = self.desk_rates[_desk]
-    return rates.borrow_rate, rates.deposit_rate
 
 @external
 def add_deposit_snapshot(
@@ -378,7 +334,6 @@ def _calculate_reward(
     provider_reward : uint256 = reward * self.providers[provider].percentage / 100
     return reward, provider_reward, provider
     
-
 @external
 @nonreentrant('lock')
 def mint_all_reward_token(
@@ -492,14 +447,44 @@ def reward_balanceOf(
     return total_reward
 
 @external
-def set_admin(
-    _new_admin: address
+@view
+def get_reward_parameters(
+    _desk: address
+) -> (uint256, uint256):
+    """
+    @notice Return the amount of reward tokens distributed to borrowers and depositors per block
+    @param _desk The desk whose reward parameters are sought
+    @return Tuple: first component is borrower rate, second is depositor rate
+    """
+
+    rates: DeskRates = self.desk_rates[_desk]
+    return rates.borrow_rate, rates.deposit_rate
+
+@external
+def set_desk_rates(
+    _desks: DynArray[address, MAX_NUM_DESKS],
+    _borrow_rates: DynArray[uint256, MAX_NUM_DESKS],
+    _deposit_rates: DynArray[uint256, MAX_NUM_DESKS]
 ):
+    """
+    @dev Set new XCRAY award rates for all registered desks. _borrow_rates[i] and _deposit_rates[i] apply to _desks[i]
+    @param _desks The array containing all registered desks. Must contain all registered desks
+    @param _borrow_rates Array containing the total amount of XCRAY to be awarded to borrowers
+    @param _deposit_rates Array containing the total amount of XCRAY to be awarded to depositors 
+    """
+    
     assert msg.sender == self.admin
 
-    self.admin = _new_admin
+    _num_desks : uint256 = len(_desks)
+    assert _num_desks == self.num_desks and _num_desks == len(_borrow_rates) and _num_desks == len(_deposit_rates)
 
-    log NewAdmin(_new_admin)
+    # some acrobatics to meet vyper's limitations. conversion is safe since _num_desks <= MAX_NUM_DESKS <= max_value(int128). argument to range() has to be a literal, hence the if statement in the loop
+    count : int128 = convert(_num_desks, int128)
+    for i in range(MAX_NUM_DESKS):
+        if i == count:
+            break
+        assert self.is_registered_desk[_desks[i]] == True
+        self.desk_rates[_desks[i]] = DeskRates({borrow_rate: _borrow_rates[i], deposit_rate: _deposit_rates[i]})
 
 @external
 def schedule_new_fee(
@@ -513,17 +498,18 @@ def schedule_new_fee(
     """
 
     assert msg.sender == self.admin and self.is_registered_desk[_desk]
-
-    from_block : uint256 = block.number + MIN_WAITING_PERIOD
-    self.new_desk_fee[_desk] = New_desk_fee({
-        horizon: _horizon,
-        fee: _new_fee,
-        from_block: from_block
-    })
     # make sure the new fee is being set for an existing horizon. can't change horizons
     assert Desk(_desk).horizons(_horizon) != 0
 
+    from_block : uint256 = block.number + MIN_WAITING_PERIOD
+    self.new_desk_fee[_desk][_horizon] = New_desk_setting({
+        is_active: True,
+        setting: _new_fee,
+        from_block: from_block
+    })
+
     log NewFee(_desk, _horizon, _new_fee, from_block)
+
 
 @external
 def schedule_new_flashloan_fee(
@@ -539,6 +525,7 @@ def schedule_new_flashloan_fee(
 
     from_block : uint256 = block.number + MIN_WAITING_PERIOD
     self.new_desk_flashloan_fee[_desk] = New_desk_setting({
+        is_active: True,
         setting: _new_flashloan_fee,
         from_block: from_block
     })
@@ -559,6 +546,7 @@ def schedule_new_liquidation_bonus(
 
     from_block : uint256 = block.number + MIN_WAITING_PERIOD
     self.new_desk_liquidation_bonus[_desk] = New_desk_setting({
+        is_active: True,
         setting: _new_liquidation_bonus, 
         from_block: from_block
     })
@@ -567,7 +555,8 @@ def schedule_new_liquidation_bonus(
 
 @external
 def commit_new_fee(
-    _desk: address
+    _desk: address,
+    _horizon: uint256
 ):
     """
     @dev Execute scheduled new fee for desk
@@ -576,12 +565,12 @@ def commit_new_fee(
 
     assert msg.sender == self.admin
 
-    new_fee_sched : New_desk_fee = self.new_desk_fee[_desk]
-    assert new_fee_sched.from_block != 0 and block.number >= new_fee_sched.from_block
+    new_fee_sched : New_desk_setting = self.new_desk_fee[_desk][_horizon]
+    assert new_fee_sched.is_active and block.number >= new_fee_sched.from_block
 
-    Desk(_desk).set_fee(new_fee_sched.horizon, new_fee_sched.fee)
+    Desk(_desk).set_fee(_horizon, new_fee_sched.setting)
 
-    self.new_desk_fee[_desk] = empty(New_desk_fee)
+    self.new_desk_fee[_desk][_horizon] = empty(New_desk_setting)
 
 @external
 def commit_new_flashloan_fee(
@@ -595,7 +584,7 @@ def commit_new_flashloan_fee(
     assert msg.sender == self.admin
 
     new_fee_sched : New_desk_setting = self.new_desk_flashloan_fee[_desk]
-    assert new_fee_sched.from_block != 0 and block.number >= new_fee_sched.from_block
+    assert new_fee_sched.is_active and block.number >= new_fee_sched.from_block
 
     Desk(_desk).set_flashloan_fee(new_fee_sched.setting)
 
@@ -613,8 +602,18 @@ def commit_new_liquidation_bonus(
     assert msg.sender == self.admin
 
     new_value : New_desk_setting = self.new_desk_liquidation_bonus[_desk]
-    assert new_value.from_block != 0 and block.number >= new_value.from_block
+    assert new_value.is_active and block.number >= new_value.from_block
 
     Desk(_desk).set_liquidation_bonus(new_value.setting)
 
     self.new_desk_liquidation_bonus[_desk] = empty(New_desk_setting)
+
+@external
+def set_admin(
+    _new_admin: address
+):
+    assert msg.sender == self.admin
+
+    self.admin = _new_admin
+
+    log NewAdmin(_new_admin)

@@ -1,10 +1,11 @@
 import pytest
 
 from brownie.network.state import Chain
+from brownie import BorrowFlashDeposit
 import brownie
 from utils import min_longable_amount
 
-# Number of blocks in a week. That's what Control uses for implementing params changes in desks
+# Number of blocks that the Control smart contract waits before implementing new fees, etc., on a desk. This number in production is the roughly number of blocks in a week. This number here is just for testing
 MIN_WAITING_PERIOD= 10
 
 def test_initial_state(long_desk):
@@ -68,7 +69,7 @@ def test_pre_borrowing(funded_desk, base_token, borrower1, contract_borrower1, l
         longable_decimals = longable.decimals()
         borrow_fee = funded_desk.borrow_fee(loan, longable, horizon)
         longable_amount = min_longable_amount(loan, longable_decimals, oracle, funded_desk.value_to_loan_ratio(), base_token.decimals(), borrow_fee)
-        contract_borrower.borrow(loan, horizon, longable, longable_amount, oracle, provider, {'from': borrower})
+        contract_borrower.borrow(loan, horizon, longable, longable_amount, provider, {'from': borrower})
         # next assertion's success depends on actions in the borrowing contract
         assert base_token.balanceOf(contract_borrower) == b + loan
         return fee
@@ -97,6 +98,27 @@ def test_pre_borrowing(funded_desk, base_token, borrower1, contract_borrower1, l
 
     repay(borrower2, longable2, contract_borrower2, provider2)
     repay(borrower1, longable1, contract_borrower1, provider1)
+
+def test_deposit_borrow_and_flash(lender1, borrower1, provider1, long_desk, longable1, base_token, horizons, erc20token_admin):
+
+    # test smart contracts that flashborrow below their deposit or collateral do not pay a fee
+
+    lender_contract = lender1.deploy(BorrowFlashDeposit, long_desk)
+    base_token.transfer(lender_contract, 1000000e18, {'from': erc20token_admin})
+    lender_contract.deposit(300000e18, {'from': lender1})
+    lender_contract.flash_borrow(base_token, 300000e18, {'from': lender1})
+
+    # assert no fee was paid
+    assert base_token.balanceOf(lender_contract) == 1000000e18 - 300000e18
+
+    borrower_contract = borrower1.deploy(BorrowFlashDeposit, long_desk)
+    longable1.transfer(borrower_contract, 1000000e18, {'from': erc20token_admin})
+        
+    borrower_contract.borrow(15000e18, horizons[0], longable1, 50000e18, provider1, {'from': borrower1})
+    borrower_contract.flash_borrow(longable1, 45000e18, {'from': borrower1})
+
+    # assert no fee was paid
+    assert longable1.balanceOf(borrower_contract) == 1000000e18 - 50000e18
 
 def test_post_borrowing(funded_desk, base_token, borrower1, longable1, oracle1, borrower2, longable2, oracle2, horizons, provider1, provider2):
 
@@ -265,7 +287,7 @@ def test_reserve(borrower1, longable1, oracle1, base_token, funded_desk, lender1
 # #     assert long_desk.horizons(h) == f
 # #     c_control.schedule_new_fee(h, 27, long_desk, {'from': control_admin})
 # #     Chain().mine(MIN_WAITING_PERIOD)
-# #     c_control.commit_new_fee(long_desk, {'from': control_admin})
+# #     c_control.commit_new_fee(long_desk, h, {'from': control_admin})
 # #     assert long_desk.horizons(h) == 27
 
 # # def test_set_flashloan_fee(long_desk, c_control, control_admin):
@@ -303,7 +325,7 @@ def test_loanof_corner(long_desk, longables, accounts):
     l, c, _ = long_desk.loanOf(user, longables[0])
     assert l == 0 and c == 0
 
-def test_rewards(xctoken, long_desk, c_control, base_token, lender1, lender2, lender3, borrower1, longable1, borrower2, longable2, horizons, provider1, provider2):
+def test_rewards(xctoken, long_desk, c_control, base_token, lender1, lender2, borrower1, longable1, horizons, provider1, provider2):
     base_coin_decimals = long_desk.base_coin_decimals()
 
     borrow_reward_per_block, deposit_reward_per_block = c_control.get_reward_parameters(long_desk)
@@ -312,32 +334,27 @@ def test_rewards(xctoken, long_desk, c_control, base_token, lender1, lender2, le
     
     chain = Chain()
 
+    def dep_reward(lender, provider, prov_percent, dep, n_blocks):
+        if dep != 0:
+            base_token.approve(long_desk, dep, {'from': lender})
+            long_desk.deposit(dep, provider, {'from': lender})
+        c_control.mint_all_reward_token(lender)
+        deposit_cumul = long_desk.deposit_cumul_reward()
+        cbal = xctoken.balanceOf(lender)
+        chain.mine(n_blocks)
+        c_control.mint_all_reward_token(lender)
+        assert long_desk.deposit_cumul_reward() - deposit_cumul == (n_blocks+1) * deposit_reward_per_block // (long_desk.total_liquidity() + long_desk.total_loans())
+        reward = (long_desk.deposit_cumul_reward() - deposit_cumul) * long_desk.balanceOf(lender)
+        assert xctoken.balanceOf(lender) - cbal == reward - reward * prov_percent // 100
+
     dep1 = 5000*10**base_coin_decimals
-    base_token.approve(long_desk, dep1, {'from': lender1})
-    long_desk.deposit(dep1, provider1, {'from': lender1})
-    c_control.mint_all_reward_token(lender1)
-    deposit_cumul = long_desk.deposit_cumul_reward()
-    cbal = xctoken.balanceOf(lender1)
     n_blocks = 4
-    chain.mine(n_blocks)
-    c_control.mint_all_reward_token(lender1)
-    assert long_desk.deposit_cumul_reward() - deposit_cumul == (n_blocks+1) * deposit_reward_per_block // long_desk.total_liquidity()
-    reward = (n_blocks+1) * deposit_reward_per_block
-    assert xctoken.balanceOf(lender1) - cbal == reward - reward * prov_percent_1 // 100
+    dep_reward(lender1, provider1, prov_percent_1, dep1, n_blocks)
 
     dep2 = 123000*10**base_coin_decimals
-    base_token.approve(long_desk, dep2, {'from': lender2})
-    long_desk.deposit(dep2, provider2, {'from': lender2})
-    c_control.mint_all_reward_token(lender2)
-    deposit_cumul = long_desk.deposit_cumul_reward()
-    cbal = xctoken.balanceOf(lender2)
     n_blocks = 5
-    chain.mine(n_blocks)
-    c_control.mint_all_reward_token(lender2)
-    assert long_desk.deposit_cumul_reward() - deposit_cumul == (n_blocks+1) * deposit_reward_per_block // long_desk.total_liquidity()
-    reward = (long_desk.deposit_cumul_reward() - deposit_cumul) * dep2
-    assert xctoken.balanceOf(lender2) - cbal == reward - reward * prov_percent_2 // 100
-
+    dep_reward(lender2, provider2, prov_percent_2, dep2, n_blocks)
+    
     bor1 = 4500*10**base_coin_decimals
     bor1_fee = long_desk.borrow_fee(bor1, longable1, horizons[0], {'from': borrower1})
     longable1.approve(long_desk, longable1.balanceOf(borrower1), {'from': borrower1})
@@ -354,12 +371,42 @@ def test_rewards(xctoken, long_desk, c_control, base_token, lender1, lender2, le
     reward = (bor1 + bor1_fee) * (long_desk.borrow_cumul_reward() - borrow_cumul)
     assert xctoken.balanceOf(borrower1) - cbal == reward - reward * prov_percent_1 // 100
 
+
+    dep_reward(lender1, provider1, prov_percent_1, 0, 4)
+    
+def test_multiple_rewards(lender1, lender2, provider1, provider2, erc20token_admin, long_desk, second_desk, c_control, xctoken, base_token, base_token2):
+    chain = Chain()
+    _, deposit_reward_per_block = c_control.get_reward_parameters(long_desk)
+    _, deposit_reward_per_block2 = c_control.get_reward_parameters(second_desk)
+    prov_percent_1 = c_control.provider_percentage(provider1)
+
+    base_token.approve(long_desk, 123000*10**long_desk.base_coin_decimals(), {'from': lender2})
+    long_desk.deposit(123000*10**long_desk.base_coin_decimals(), provider2, {'from': lender2})
+
+    base_token2.transfer(lender1, 1000000e8, {'from': erc20token_admin})
+
+    dep1 = 5000*10**long_desk.base_coin_decimals()
+    dep2 = 45000*10**second_desk.base_coin_decimals()
+
+    base_token.approve(long_desk, dep1, {'from': lender1})
+    base_token2.approve(second_desk, dep2, {'from': lender1})
+
+    long_desk.deposit(dep1, provider1, {'from': lender1})
+    second_desk.deposit(dep2, provider1, {'from': lender1})
+
     c_control.mint_all_reward_token(lender1)
+
     deposit_cumul = long_desk.deposit_cumul_reward()
+    deposit_cumul2 = second_desk.deposit_cumul_reward()
+
     cbal = xctoken.balanceOf(lender1)
     n_blocks = 4
     chain.mine(n_blocks)
     c_control.mint_all_reward_token(lender1)
     assert long_desk.deposit_cumul_reward() - deposit_cumul == (n_blocks+1) * deposit_reward_per_block // (long_desk.total_liquidity() + long_desk.total_loans())
+    assert second_desk.deposit_cumul_reward() - deposit_cumul2 == (n_blocks+1) * deposit_reward_per_block2 // (second_desk.total_liquidity() + second_desk.total_loans())
+    
     reward = (long_desk.deposit_cumul_reward() - deposit_cumul) * long_desk.balanceOf(lender1)
-    assert xctoken.balanceOf(lender1) - cbal == reward - reward * prov_percent_1 // 100
+    reward2 = (second_desk.deposit_cumul_reward() - deposit_cumul2) * second_desk.balanceOf(lender1)
+    rwd = reward + reward2
+    assert xctoken.balanceOf(lender1) - cbal == rwd - rwd * prov_percent_1 // 100

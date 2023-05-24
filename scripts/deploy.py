@@ -23,6 +23,10 @@ def deploy_xctoken(admin_account, dev_account):
 def deploy_c_control(admin_account, xctoken):
     return admin_account.deploy(Control, admin_account, xctoken)
 
+def estimate_gas_c_control(admin_account, xctoken):
+    data = Control.deploy.encode_input(admin_account, xctoken)
+    return admin_account.estimate_gas(data=data)
+
 def add_minter(admin_account, xctoken, c_control):
     xctoken.add_minter(c_control, {'from': admin_account})
 
@@ -51,6 +55,15 @@ def deploy_desk(path_to_data_file, admin_account, c_control):
     assert len(desk_data['oracles']) == len(desk_data['longables'])
 
     return admin_account.deploy(Desk, desk_data['base_coin'], desk_data['base_decimals'], desk_data['longables'], desk_data['longable_decimals'], desk_data['oracles'], c_control, desk_data['value_to_loan_ratio'], desk_data['flashloan_fee'], desk_data['liquidation_bonus'], desk_data['horizons'], desk_data['fees'])
+
+def estimate_gas_desk(path_to_data_file, admin_account, c_control):
+    with open(path_to_data_file + '/desk_data.json') as fp:
+        desk_data = json.load(fp)
+
+    assert len(desk_data['oracles']) == len(desk_data['longables'])
+    data = Desk.deploy.encode_input(desk_data['base_coin'], desk_data['base_decimals'], desk_data['longables'], desk_data['longable_decimals'], desk_data['oracles'], c_control, desk_data['value_to_loan_ratio'], desk_data['flashloan_fee'], desk_data['liquidation_bonus'], desk_data['horizons'], desk_data['fees'])
+
+    return admin_account.estimate_gas(data=data)
 
 def register_desk(path_to_data_file, admin_account, c_control, desk):
     with open(path_to_data_file + '/control_data.json') as fp:

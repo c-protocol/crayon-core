@@ -4,7 +4,7 @@ from vyper.interfaces import ERC20
 
 MAX_DATA_LENGTH: constant(int128) = 256
 
-interface FlashLender:
+interface CrayonDesk:
     def flashloan_fee(
     ) -> uint256: view
 
@@ -79,7 +79,7 @@ def flash_borrow(
 
     # check how much lender was already approved for
     allowance : uint256 = ERC20(_token).allowance(self, self.lender)
-    fee : uint256 = FlashLender(self.lender).flashloan_fee() * _amount / 10000
+    fee : uint256 = CrayonDesk(self.lender).flashloan_fee() * _amount / 10000
     repayment : uint256 = _amount + fee
    
     ERC20(_token).approve(self.lender, allowance + repayment)
@@ -89,4 +89,4 @@ def flash_borrow(
 
     self.initial_balance = ERC20(_token).balanceOf(self)
 
-    FlashLender(self.lender).flashloan(_amount, _token, self, data)
+    CrayonDesk(self.lender).flashloan(_amount, _token, self, data)

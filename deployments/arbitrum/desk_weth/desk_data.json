@@ -1,0 +1,18 @@
+{
+    "base_coin": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "base_decimals": 18,
+    "longables": [
+        "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+    ],
+    "longable_decimals": [
+        8
+    ],
+    "oracles": [
+        "0xdeb288f737066589598e9214e782fa5a8ed689e8"
+    ],
+    "value_to_loan_ratio": 130,
+    "flashloan_fee": 9,
+    "liquidation_bonus": 500,
+    "horizons": [5760, 17280, 40320],
+    "fees": [9, 18, 45]
+}
