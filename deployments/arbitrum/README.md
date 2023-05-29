@@ -23,6 +23,6 @@ Contracts deployed to Arbitrum One.
         * borrowers: 0.5 XCRAY
         * lenders: 0.5 XCRAY
 
-    * threshold to liquidation (collateral value / loan value): 130
+    * threshold to liquidation (collateral value / loan value): 130%
     * liquidation bonus: 500 bps (5%)
     * fee for flash loans (base coin or longables): 9 bps
