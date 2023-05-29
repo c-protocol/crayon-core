@@ -1,14 +1,17 @@
 {
-    "base_coin": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "base_coin": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
     "base_decimals": 18,
     "longables": [
-        "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+        "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        "0x5979D7b546E38E414F7E9822514be443A4800529"
     ],
     "longable_decimals": [
-        8
+        8,
+        18
     ],
     "oracles": [
-        "0xdeb288f737066589598e9214e782fa5a8ed689e8"
+        "0xc5a90a6d7e4af242da238ffe279e9f2ba0c64b2e",
+        "0xb523ae262d20a936bc152e6023996e46fdc2a95d"
     ],
     "value_to_loan_ratio": 130,
     "flashloan_fee": 9,

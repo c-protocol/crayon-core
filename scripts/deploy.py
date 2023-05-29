@@ -9,11 +9,11 @@ import time
 from brownie import XCToken, Control, Desk, OracleNormalizer, TestOracleSepolia
 import brownie
 
-def load_accounts():
+def load_accounts(adm, dev):
     # admin_account owns the deployment of all our contracts. we can have different owners for different contracts if desired later
-    admin_account = brownie.accounts.load('admin_account')
+    admin_account = brownie.accounts.load(adm)
     # retrieve account. that's the address rewarded with the initial issue of XCRAY
-    dev_account = brownie.accounts.load('dev_account')
+    dev_account = brownie.accounts.load(dev)
 
     return admin_account, dev_account
 

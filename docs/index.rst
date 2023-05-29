@@ -43,6 +43,27 @@ Features
 Contracts
 =========
 
+.. list-table:: **Arbitrum Contracts**
+    :width: 75%
+    :widths: 150 225
+    :header-rows: 1
+
+    *   -
+        -
+    *   - Contract
+        - Address
+    *   -
+        -
+    *   - ETH_Desk
+        - `0x8351483e30928D1Fe1f80eD5062c6438faa85b88 <https://arbiscan.io/address/0x8351483e30928D1Fe1f80eD5062c6438faa85b88#writeContract>`_
+    *   - Control
+        - `0xe2c5fAC44aF73D44E047879C7A20383ecDC2EEfa <https://arbiscan.io/address/0xe2c5fAC44aF73D44E047879C7A20383ecDC2EEfa>`_ 
+    *   - XCRAY
+        - `0x2dEbe92EdBbA661362fC8BF062551E7c993ACb02 <https://arbiscan.io/address/0x2dEbe92EdBbA661362fC8BF062551E7c993ACb02>`_ 
+    
+
+
+
 .. list-table:: **Sepolia Contracts**
     :width: 75%
     :widths: 150 225

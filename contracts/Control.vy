@@ -2,7 +2,7 @@
 # (c) Crayon Protocol Authors, 2023
 
 """
-@title Crayon Protocol Conrol
+@title Crayon Protocol Control
 """
 
 
