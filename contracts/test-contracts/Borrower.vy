@@ -64,7 +64,7 @@ def on_bridge_loan(
     """
     @dev Callback function used by desk when contract calls borrow_then_post_longable() or withdraw_longable_then_repay()
     @param _initiator The contract initiating the call
-    @param _token The desk's base coin
+    @param _token The desk's base coin (when borrowing) or a longable (when unwinding the trade with repay())
     @param _amount The amount of tokens the desk transferred to this contract
     @param data Data that was initially built by this contract and that, for example, contains actions upon callback
     """

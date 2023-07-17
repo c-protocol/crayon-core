@@ -1,0 +1,65 @@
+{
+    "control": "0xe2c5fAC44aF73D44E047879C7A20383ecDC2EEfa",
+    "base_token": {
+        "address": "0x3082CC23568eA640225c2467653dB90e9250AaA0",
+        "holder": "0x9d9e4a95765154a575555039e9e2a321256b5704"
+    },
+    "base_token_oracle": "0x20d0fcab0ecfd078b036b6caf1fac69a6453b352",
+    "longables": [
+        {
+            "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+            "holder": "0x489ee077994b6658eafa855c308275ead8097c4a"
+        },
+        {
+            "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+            "holder": "0x489ee077994b6658eafa855c308275ead8097c4a"
+        },
+        {
+            "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+            "holder": "0xf3fc178157fb3c87548baa86f9d24ba38e649b58"
+        },
+        {
+            "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+            "holder": "0xb38e8c17e38363af6ebdcb3dae12e0243582891d"
+        },
+        {
+            "address": "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+            "holder": "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
+        }
+    ],
+    "oracles": [
+        {
+            "is_normalized": true,
+            "address": "0x639fe6ab55c921f74e7fac1ee960c0b6293ba612",
+            "normalized_decimals": 8
+        },
+        {
+            "is_normalized": true,
+            "address": "0x6ce185860a4963106506c203335a2910413708e9",
+            "normalized_decimals": 8
+        },
+        {
+            "is_normalized": true,
+            "address": "0xb2a824043730fe05f3da2efafa1cbbe83fa548d6",
+            "normalized_decimals": 8
+        },
+        {
+            "is_normalized": true,
+            "address": "0x50834f3163758fcc1df9973b6e91f0f0f0434ad3",
+            "normalized_decimals": 8
+        },
+        {
+            "is_normalized": true,
+            "address": "0xdb98056fecfff59d032ab628337a4887110df3db",
+            "normalized_decimals": 8
+        }
+    ],
+    "value_to_loan_ratio": 130,
+    "flashloan_fee": 9,
+    "liquidation_bonus": 500,
+    "horizons": [5760, 17280, 40320],
+    "fees": [9, 18, 45],
+    "dep_reward": 5e+26,
+    "bor_reward": 5e+26
+}
+

@@ -197,7 +197,7 @@ Smart contracts deployed by leveraged traders can follow these two templates. Th
         """
         @dev Callback function used by desk when smart contract calls borrow_then_post_longable() or withdraw_longable_then_repay()
         @param _initiator The contract initiating the call
-        @param _token The desk's base coin
+        @param _token The desk's base coin (when borrowing) or a longable (when unwinding the trade with repay())
         @param _amount The amount of tokens the desk transferred to this contract
         @param data Data that was initially built by this contract and that, for example, contains actions upon callback
         """
@@ -354,8 +354,8 @@ And a template for Solidity traders:
         constructor(address _desk) {
 
             /*
-             * _desk is the desk from which we want to borrow
-             */
+            * _desk is the desk from which we want to borrow
+            */
             
             desk = _desk;
             owner = msg.sender;
@@ -368,13 +368,12 @@ And a template for Solidity traders:
             bytes calldata data
         ) external returns(bytes32) {
             /**
-             * @dev Callback function used by desk when smart contract calls flashloan()
-             * @param _initiator The contract initiating the call
-             * @param _token The token this contract is borrowing
-             * @param _amount The amount of _token the desk transferred to this contract
-             * @param _fee The fee for the flash loan. It's 0 if contract borrowed from its own deposit or its own collateral
-             * @param data Data that was initially built by this contract and that, for example, contains actions upon callback
-             */
+            * @dev Callback function used by desk when contract calls borrow_then_post_longable() or withdraw_longable_then_repay()
+            * @param _initiator The contract initiating the call
+            * @param _token The desk's base coin (when borrowing) or a longable (when unwinding the trade with repay())
+            * @param _amount The amount of tokens the desk transferred to this contract
+            * @param data Data that was initially built by this contract and that, for example, contains actions upon callback
+            */
 
             require(msg.sender == desk);
             require(_initiator == address(this));
@@ -400,13 +399,13 @@ And a template for Solidity traders:
             uint256 _longable_amount,
             address _provider) external {
             /**
-             * @dev Borrow base coin and post longable satisfying value_to_loan_ratio in one transaction
-             * @param _amount The number of base_coin tokens to be borrowed
-             * @param _horizon The horizon for this loan, i.e., the period for which the loan is desired. Must be one of the acceptable horizons
-             * @param _longable_token The address of the ERC20 token that will be posted. Must be one of the acceptable longable tokens
-             * @param _longable_amount The amount of longable to be posted against the loan at the end of the transaction
-             * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
-             */
+            * @dev Borrow base coin and post longable satisfying value_to_loan_ratio in one transaction
+            * @param _amount The number of base_coin tokens to be borrowed
+            * @param _horizon The horizon for this loan, i.e., the period for which the loan is desired. Must be one of the acceptable horizons
+            * @param _longable_token The address of the ERC20 token that will be posted. Must be one of the acceptable longable tokens
+            * @param _longable_amount The amount of longable to be posted against the loan at the end of the transaction
+            * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
+            */
 
             require(msg.sender == owner);
 
@@ -421,10 +420,10 @@ And a template for Solidity traders:
             address _longable_token,
             address _provider) external {
             /**
-             * @dev Withdraw token posted as collateral and repay part/all of the loan in one transaction
-             * @param _longable_token The address of the ERC20 token that was posted
-             * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
-             */
+            * @dev Withdraw token posted as collateral and repay part/all of the loan in one transaction
+            * @param _longable_token The address of the ERC20 token that was posted
+            * @param _provider Set to empty(address) if writing your own contract. For use by front-end and/or third-party providers
+            */
 
             require(msg.sender == owner);
 
@@ -449,9 +448,9 @@ And a template for Solidity traders:
             bool _is_transferring
         ) external {
             /**
-             * @dev Mint the XCRAY reward tokens that have accumulated to this smart contract
-             * @param _is_transferring Optional parameter. True means transfer minted tokens to owner
-             */
+            * @dev Mint the XCRAY reward tokens that have accumulated to this contract
+            * @param _is_transferring Optional parameter. True means transfer minted tokens to owner
+            */
 
             // One way to do it...
             address control_contract = CrayonDesk(desk).control_contract();

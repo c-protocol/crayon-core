@@ -1,0 +1,30 @@
+{
+    "base_coin": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+    "base_decimals": 6,
+    "longables": [
+        "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+        "0x912CE59144191C1204E64559FE8253a0e49E6548",
+        "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        "0x3082CC23568eA640225c2467653dB90e9250AaA0"
+    ],
+    "longable_decimals": [
+        8,
+        18,
+        18,
+        18,
+        18
+    ],
+    "oracles": [
+        "0xB2c742c8b96C50E6dAF57A21c29f096737172acB",
+        "0xDA584431C700852d5bD9066F803bB07a31d37b0E",
+        "0x224F0e7EAe498Aa2a60A73A4e6Ac73Ef82E934Aa",
+        "0x95cD44358D301B2A48fF85f5a4F02547c03c8285",
+        "0xbD2A74a9797FC0B1E8136D24cD3B43637744ad09"
+    ],
+    "value_to_loan_ratio": 130,
+    "flashloan_fee": 9,
+    "liquidation_bonus": 500,
+    "horizons": [5760, 17280, 40320],
+    "fees": [9, 18, 45]
+}

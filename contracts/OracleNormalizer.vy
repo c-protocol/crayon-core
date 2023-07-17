@@ -37,7 +37,7 @@ def __init__(
     self.token_oracle = IChainlinkOracle(_token_oracle)
     self.decimals = _decimals
     # this will revert if _decimals is not set appropriately
-    self.adjusted_decimals = self.decimals + IChainlinkOracle(_numeraire_oracle).decimals() - IChainlinkOracle(_token_oracle).decimals()
+    self.adjusted_decimals = _decimals + IChainlinkOracle(_numeraire_oracle).decimals() - IChainlinkOracle(_token_oracle).decimals()
 
 @external
 @view

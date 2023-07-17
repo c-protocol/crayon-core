@@ -40,4 +40,4 @@ brownie test --stateful true
 
 The Vyper language does not allow contract inheritance (a good thing!). Deployed desks are built from a Desk template [`contracts/desk-templates`](contracts/desk-templates/) together with data specific to each desk. The data is a json file in a folder with a name beginning with `desk_` in [`deployments/`](deployments/).
 
-[`contracts/Control.vy`](contracts/Control.vy/) is the governance contract for Crayon Protocol. It currently has sole priviledges to set key variables on the different desks and minting reward tokens for users. It will eventually be controlled by the Crayon Protocol DAO.
+[`contracts/Control.vy`](contracts/Control.vy/) is the governance contract for Crayon Protocol. It currently has sole privileges to set key variables on the different desks and minting reward tokens for users. It will eventually be controlled by the Crayon Protocol DAO.

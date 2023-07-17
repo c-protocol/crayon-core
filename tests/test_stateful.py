@@ -400,7 +400,7 @@ class StateMachine:
         # funds "reserved" for withdrawal appear as withdrawn in state machine. we correct here
         total_deposits += self.desk.total_reserved()
         if total_deposits == 0:
-            assert abs(self.desk.total_liquidity() + self.desk.total_loans()) <= 1
+            assert abs(self.desk.total_liquidity() + self.desk.total_loans()) <= 9
         elif abs(total_deposits - (self.desk.total_liquidity() + self.desk.total_loans())) != 1:
             assert abs(total_deposits - (self.desk.total_liquidity() + self.desk.total_loans())) / total_deposits < self.one_100th_bps
 

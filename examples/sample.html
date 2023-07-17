@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.6.0/ethers.min.js"></script> -->
+    
+    <body>
+
+        
+        <script type="module">
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.6.0/ethers.min.js";
+            
+
+            if (typeof window.ethereum === 'undefined') {
+                console.error('no metamask')
+            }
+
+
+            const arbProvider = new ethers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
+            const browserProvider = new ethers.BrowserProvider(window.ethereum)
+
+            window.ethereum.on('chainChanged', (chainId) => window.location.reload());
+            const signer = await browserProvider.getSigner(0);
+            console.log(signer)
+            const balance = await arbProvider.getBalance(signer)
+            console.log(balance)
+
+            const browserSigner = await browserProvider.getSigner(0);
+            console.log(browserSigner)
+
+            // the desk address
+            const abi = [
+                'function total_liquidity() view returns (uint256)'
+            ]
+            const deskAddress = '0x8351483e30928D1Fe1f80eD5062c6438faa85b88';
+            const crayonDesk = new ethers.Contract(deskAddress, abi, arbProvider)
+            const tliq = await crayonDesk.total_liquidity()
+            console.log('tliq ', tliq)
+        </script>
+    </body>
+
+</html>
