@@ -95,6 +95,40 @@ Contracts deployed to Arbitrum One.
     * liquidation bonus: 500 bps (5%)
     * fee for flash loans (base coin or longables): 9 bps
 
+* ARB desk:
+
+    * base coin: ARB (0x912CE59144191C1204E64559FE8253a0e49E6548)
+    * longables:
+
+        * WETH: 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1
+        * WBTC: 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f
+        * GMX:  0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a
+        * USDC: 0xaf88d065e77c8cC2239327C5EDb3A432268e5831
+        * RDNT: 0x3082CC23568eA640225c2467653dB90e9250AaA0
+
+    * oracles (normalized from Chainlink prices):
+
+        * WETH: 0x1Ff947C7F44A1001aC7821b9aD4e3c2A0c840B70
+        * WBTC: 0xE3Ff67F96bfE959b1779c1A22A8De65E1E13D38B
+        * GMX:  0x98bda488D7771eDc6498A411210aA8e533ca4fb1
+        * USDC: 0xBFB072221C1b297db87a479656C0ad7A5d95B0af
+        * RDNT: 0xF49C148B82D7F20ED107ebA0F3C6de89AD78f2d5
+
+    * horizons (periods for loans) and current fees:
+
+        * 5760 blocks (~ 1 day) for 9 bps
+        * 17280 blocks (~ 3 days) for 18 bps
+        * 40320 blocks (~ 7 days) for 45 bps
+
+    * current rates of XCRAY rewards per block:
+
+        * borrowers: 0.5 XCRAY
+        * lenders: 0.5 XCRAY
+
+    * threshold to liquidation (collateral value / loan value): 130%
+    * liquidation bonus: 500 bps (5%)
+    * fee for flash loans (base coin or longables): 9 bps
+
 ### Oracles
 
 All oracles in [`oracles_data.json`](oracles_data.json) are Chainlink oracles and have USD as numeraire. We combine two oracles to change the numeraire for use in one of our desks. A change of numeraire amounts to calculating a price ratio.

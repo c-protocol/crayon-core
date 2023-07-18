@@ -16,11 +16,11 @@
         18
     ],
     "oracles": [
-        "",
-        "",
-        "",
-        "",
-        ""
+        "0x1Ff947C7F44A1001aC7821b9aD4e3c2A0c840B70",
+        "0xE3Ff67F96bfE959b1779c1A22A8De65E1E13D38B",
+        "0x98bda488D7771eDc6498A411210aA8e533ca4fb1",
+        "0xBFB072221C1b297db87a479656C0ad7A5d95B0af",
+        "0xF49C148B82D7F20ED107ebA0F3C6de89AD78f2d5"
     ],
     "value_to_loan_ratio": 130,
     "flashloan_fee": 9,

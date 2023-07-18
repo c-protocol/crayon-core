@@ -17,6 +17,12 @@ Crayon Protocol
     concepts.rst
 
 .. toctree::
+    :caption: Deployed
+    :maxdepth: 2
+
+    deployed.rst
+
+.. toctree::
     :caption: Lending
     :maxdepth: 2
 
