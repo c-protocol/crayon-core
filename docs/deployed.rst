@@ -81,7 +81,7 @@ Contracts deployed to Arbitrum One.
 ``ARB`` desk
 ============
     * desk address: `0x343d5F534C4C1fB83cdDf0875cC91591cCf69416 <https://arbiscan.io/address/0x343d5F534C4C1fB83cdDf0875cC91591cCf69416#writeContract>`_
-    * base coin: ``ARB`` ()
+    * base coin: ``ARB`` (`0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_)
     * longables:
         * ``WETH``: `0x82aF49447D8a07e3bd95BD0d56f35241523fBab1 <https://arbiscan.io/address/0x82aF49447D8a07e3bd95BD0d56f35241523fBab1>`_
         * ``WBTC``: `0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f <https://arbiscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f>`_
