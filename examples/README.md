@@ -15,7 +15,7 @@ brownie test examples --network arbitrum-fork
 ```
 ### Set-up
 
-Your Brownie `network-config.yaml` file (typically found in ~/.brownie on linux systems) must have the following entry:
+Your Brownie `network-config.yaml` file (typically found in `~/.brownie` on linux systems) must have an entry for an Arbitrum fork, for example:
 
 ```yaml
 - name: Ganache-CLI (Arbitrum Fork)
