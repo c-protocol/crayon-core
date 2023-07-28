@@ -2,7 +2,7 @@
 
 Power users can borrow from a Crayon Desk, add borrowed coins to their initial principal and swap them on a DEX for another coin that they post back as collateral on the Crayon desk. This creates a leveraged, (almost) dollar-matched pairs trade. Slippage on the DEX prevents this from being an exact dollar match.
 
-This folder contains test code for integrations with various DEXes. Just as in the case of flashloans on other protocols, power users have to deploy a smart contract when executing the trade as described above. The actual smart contracts used by the integration tests here are in [`contracts/test-contracts`](contracts/test-contracts/).
+This folder contains test code for integrations with various DEXes. Just as in the case of flashloans on other protocols, power users have to deploy a smart contract when executing the trade as described above. The actual smart contracts used by the integration tests here are in [`../contracts/test-contracts`](contracts/test-contracts/).
 
 Crayon Protocol is currently only deployed on Arbitrum Main.
 
