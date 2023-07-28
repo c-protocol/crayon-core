@@ -8,7 +8,7 @@ Crayon Protocol is currently only deployed on Arbitrum Main.
 
 ### Testing
 
-The tests must be run against a fork of Arbitrum and require an arbiscan API Key (see [`Getting an API key`](https://docs.arbiscan.io/getting-started/viewing-api-usage-statistics)). From the root directory do:
+The tests must be run against a fork of Arbitrum and require an Arbiscan API key (see [`Getting an API key`](https://docs.arbiscan.io/getting-started/viewing-api-usage-statistics)). From the root directory do:
 
 ```bash
 brownie test examples --network arbitrum-fork
