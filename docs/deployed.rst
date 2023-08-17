@@ -80,6 +80,7 @@ Contracts deployed to Arbitrum One.
 
 ``ARB`` desk
 ============
+
     * desk address: `0x343d5F534C4C1fB83cdDf0875cC91591cCf69416 <https://arbiscan.io/address/0x343d5F534C4C1fB83cdDf0875cC91591cCf69416#writeContract>`_
     * base coin: ``ARB`` (`0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_)
     * longables:
@@ -104,3 +105,61 @@ Contracts deployed to Arbitrum One.
     * threshold to liquidation (collateral value / loan value): 130%
     * liquidation bonus: 500 bps (5%)
     * fee for flash loans (base coin or longables): 9 bps
+
+``GMX`` desk
+============
+
+    * desk address: `0x635b2fE7bF8d41B0477A492f953f57b40E385Cfb <https://arbiscan.io/address/0x635b2fE7bF8d41B0477A492f953f57b40E385Cfb#writeContract>`_
+    * base coin: ``GMX`` (`0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a <https://arbiscan.io/address/0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a>`_)
+    * longables:
+        * ``WETH``: `0x82aF49447D8a07e3bd95BD0d56f35241523fBab1 <https://arbiscan.io/address/0x82aF49447D8a07e3bd95BD0d56f35241523fBab1>`_
+        * ``WBTC``: `0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f <https://arbiscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f>`_
+        * ``ARB`` : `0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_
+        * ``USDC``: `0xaf88d065e77c8cC2239327C5EDb3A432268e5831 <https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831>`_
+        * ``RDNT``: `0x3082CC23568eA640225c2467653dB90e9250AaA0 <https://arbiscan.io/address/0x3082CC23568eA640225c2467653dB90e9250AaA0>`_
+    * oracles (price ratios to ``ARB`` from Chainlink prices):
+        * ``WETH``: `0x5FFA5275A36292a1FF31F7D23491334250209143 <https://arbiscan.io/address/0x5FFA5275A36292a1FF31F7D23491334250209143>`_
+        * ``WBTC``: `0xd5B236C34F4767dc323922FFE8FC0636257aDc15 <https://arbiscan.io/address/0xd5B236C34F4767dc323922FFE8FC0636257aDc15>`_
+        * ``ARB`` : `0xd931d55F3C2CBa797015f9C71eE01986B433Bc61 <https://arbiscan.io/address/0xd931d55F3C2CBa797015f9C71eE01986B433Bc61>`_
+        * ``USDC``: `0x78489dDF2fD9ef4c4E809598A6271991347E82Fc <https://arbiscan.io/address/0x78489dDF2fD9ef4c4E809598A6271991347E82Fc>`_
+        * ``RDNT``: `0x4f594d0f096E8ac666806Cff1503A067cA01864A <https://arbiscan.io/address/0x4f594d0f096E8ac666806Cff1503A067cA01864A>`_
+    * horizons (periods for loans) and current fees:
+        * 5760 blocks (~ 1 day) for 9 bps
+        * 17280 blocks (~ 3 days) for 18 bps
+        * 40320 blocks (~ 7 days) for 45 bps
+    * current rates of XCRAY rewards per block:
+        * borrowers: 0.5 XCRAY
+        * lenders: 0.5 XCRAY
+    * threshold to liquidation (collateral value / loan value): 130%
+    * liquidation bonus: 500 bps (5%)
+    * fee for flash loans (base coin or longables): 9 bps
+
+
+``RDNT`` desk
+============
+
+    * desk address: `0xfE2A45BF13965393c863460F063bDD4a9874c415 <https://arbiscan.io/address/0xfE2A45BF13965393c863460F063bDD4a9874c415#writeContract>`_
+    * base coin: ``RDNT`` (`0x3082CC23568eA640225c2467653dB90e9250AaA0 <https://arbiscan.io/address/0x3082CC23568eA640225c2467653dB90e9250AaA0>`_)
+    * longables:
+        * ``WETH``: `0x82aF49447D8a07e3bd95BD0d56f35241523fBab1 <https://arbiscan.io/address/0x82aF49447D8a07e3bd95BD0d56f35241523fBab1>`_
+        * ``WBTC``: `0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f <https://arbiscan.io/address/0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f>`_
+        * ``ARB`` : `0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_
+        * ``USDC``: `0xaf88d065e77c8cC2239327C5EDb3A432268e5831 <https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831>`_
+        * ``GMX``: `0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a <https://arbiscan.io/address/0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a>`_
+    * oracles (price ratios to ``ARB`` from Chainlink prices):
+        * ``WETH``: `0x0955c1FD089dea1929C2bD7176e08eE29fD92b4D <https://arbiscan.io/address/0x0955c1FD089dea1929C2bD7176e08eE29fD92b4D>`_
+        * ``WBTC``: `0x7C3155653E0075F7dB75D9CAeA4B3D6bD39DdaE6 <https://arbiscan.io/address/0x7C3155653E0075F7dB75D9CAeA4B3D6bD39DdaE6>`_
+        * ``ARB`` : `0xE31ea2670050F0F30Ca9c4217672675F2876F385 <https://arbiscan.io/address/0xE31ea2670050F0F30Ca9c4217672675F2876F385>`_
+        * ``USDC``: `0x3F0681C63ce9d7f1A3474c9a1dA6875AE4D223D3 <https://arbiscan.io/address/0x3F0681C63ce9d7f1A3474c9a1dA6875AE4D223D3>`_
+        * ``GMX``:  `0xD5933D569c064E4D291991260cA24d4917db69F3 <https://arbiscan.io/address/0xD5933D569c064E4D291991260cA24d4917db69F3>`_
+    * horizons (periods for loans) and current fees:
+        * 5760 blocks (~ 1 day) for 9 bps
+        * 17280 blocks (~ 3 days) for 18 bps
+        * 40320 blocks (~ 7 days) for 45 bps
+    * current rates of XCRAY rewards per block:
+        * borrowers: 0.5 XCRAY
+        * lenders: 0.5 XCRAY
+    * threshold to liquidation (collateral value / loan value): 130%
+    * liquidation bonus: 500 bps (5%)
+    * fee for flash loans (base coin or longables): 9 bps
+

@@ -129,6 +129,74 @@ Contracts deployed to Arbitrum One.
     * liquidation bonus: 500 bps (5%)
     * fee for flash loans (base coin or longables): 9 bps
 
+* GMX desk:
+
+    * base coin: GMX (0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a)
+    * longables:
+
+        * WETH: 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1
+        * WBTC: 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f
+        * ARB:  0x912CE59144191C1204E64559FE8253a0e49E6548
+        * USDC: 0xaf88d065e77c8cC2239327C5EDb3A432268e5831
+        * RDNT: 0x3082CC23568eA640225c2467653dB90e9250AaA0
+
+    * oracles (normalized from Chainlink prices):
+
+        * WETH: 0x5FFA5275A36292a1FF31F7D23491334250209143
+        * WBTC: 0xd5B236C34F4767dc323922FFE8FC0636257aDc15
+        * ARB:  0xd931d55F3C2CBa797015f9C71eE01986B433Bc61
+        * USDC: 0x78489dDF2fD9ef4c4E809598A6271991347E82Fc
+        * RDNT: 0x4f594d0f096E8ac666806Cff1503A067cA01864A
+
+    * horizons (periods for loans) and current fees:
+
+        * 5760 blocks (~ 1 day) for 9 bps
+        * 17280 blocks (~ 3 days) for 18 bps
+        * 40320 blocks (~ 7 days) for 45 bps
+
+    * current rates of XCRAY rewards per block:
+
+        * borrowers: 0.5 XCRAY
+        * lenders: 0.5 XCRAY
+
+    * threshold to liquidation (collateral value / loan value): 130%
+    * liquidation bonus: 500 bps (5%)
+    * fee for flash loans (base coin or longables): 9 bps
+
+* RDNT desk:
+
+    * base coin: RDNT (0x3082CC23568eA640225c2467653dB90e9250AaA0)
+    * longables:
+
+        * WETH: 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        * WBTC: 0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        * ARB:  0x912CE59144191C1204E64559FE8253a0e49E6548",
+        * USDC: 0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        * GMX:  0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a"
+
+    * oracles (normalized from Chainlink prices):
+
+        * WETH: 0x0955c1FD089dea1929C2bD7176e08eE29fD92b4D
+        * WBTC: 0x7C3155653E0075F7dB75D9CAeA4B3D6bD39DdaE6
+        * ARB:  0xE31ea2670050F0F30Ca9c4217672675F2876F385
+        * USDC: 0x3F0681C63ce9d7f1A3474c9a1dA6875AE4D223D3
+        * GMX:  0xD5933D569c064E4D291991260cA24d4917db69F3
+
+    * horizons (periods for loans) and current fees:
+
+        * 5760 blocks (~ 1 day) for 9 bps
+        * 17280 blocks (~ 3 days) for 18 bps
+        * 40320 blocks (~ 7 days) for 45 bps
+
+    * current rates of XCRAY rewards per block:
+
+        * borrowers: 0.5 XCRAY
+        * lenders: 0.5 XCRAY
+
+    * threshold to liquidation (collateral value / loan value): 130%
+    * liquidation bonus: 500 bps (5%)
+    * fee for flash loans (base coin or longables): 9 bps
+
 ### Oracles
 
 All oracles in [`oracles_data.json`](oracles_data.json) are Chainlink oracles and have USD as numeraire. We combine two oracles to change the numeraire for use in one of our desks. A change of numeraire amounts to calculating a price ratio.

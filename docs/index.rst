@@ -62,8 +62,11 @@ Contracts
         - `0x5dE27C6D5524EE07c0dB88CAB65022E3210a81c4 <https://arbiscan.io/address/0x5dE27C6D5524EE07c0dB88CAB65022E3210a81c4#writeContract>`_
     *   - ARB_Desk
         - `0x343d5F534C4C1fB83cdDf0875cC91591cCf69416 <https://arbiscan.io/address/0x343d5F534C4C1fB83cdDf0875cC91591cCf69416#writeContract>`_
+    *   - GMX_Desk
+        - `0x635b2fE7bF8d41B0477A492f953f57b40E385Cfb <https://arbiscan.io/address/0x635b2fE7bF8d41B0477A492f953f57b40E385Cfb#writeContract>`_
+    *   - RDNT_Desk
+        - `0xfE2A45BF13965393c863460F063bDD4a9874c415 <https://arbiscan.io/address/0xfE2A45BF13965393c863460F063bDD4a9874c415#writeContract>`_
     *   - Control
         - `0xe2c5fAC44aF73D44E047879C7A20383ecDC2EEfa <https://arbiscan.io/address/0xe2c5fAC44aF73D44E047879C7A20383ecDC2EEfa>`_ 
     *   - XCRAY
         - `0x2dEbe92EdBbA661362fC8BF062551E7c993ACb02 <https://arbiscan.io/address/0x2dEbe92EdBbA661362fC8BF062551E7c993ACb02>`_ 
-
