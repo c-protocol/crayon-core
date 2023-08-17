@@ -117,7 +117,7 @@ Contracts deployed to Arbitrum One.
         * ``ARB`` : `0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_
         * ``USDC``: `0xaf88d065e77c8cC2239327C5EDb3A432268e5831 <https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831>`_
         * ``RDNT``: `0x3082CC23568eA640225c2467653dB90e9250AaA0 <https://arbiscan.io/address/0x3082CC23568eA640225c2467653dB90e9250AaA0>`_
-    * oracles (price ratios to ``ARB`` from Chainlink prices):
+    * oracles (price ratios to ``GMX`` from Chainlink prices):
         * ``WETH``: `0x5FFA5275A36292a1FF31F7D23491334250209143 <https://arbiscan.io/address/0x5FFA5275A36292a1FF31F7D23491334250209143>`_
         * ``WBTC``: `0xd5B236C34F4767dc323922FFE8FC0636257aDc15 <https://arbiscan.io/address/0xd5B236C34F4767dc323922FFE8FC0636257aDc15>`_
         * ``ARB`` : `0xd931d55F3C2CBa797015f9C71eE01986B433Bc61 <https://arbiscan.io/address/0xd931d55F3C2CBa797015f9C71eE01986B433Bc61>`_
@@ -146,7 +146,7 @@ Contracts deployed to Arbitrum One.
         * ``ARB`` : `0x912CE59144191C1204E64559FE8253a0e49E6548 <https://arbiscan.io/address/0x912CE59144191C1204E64559FE8253a0e49E6548>`_
         * ``USDC``: `0xaf88d065e77c8cC2239327C5EDb3A432268e5831 <https://arbiscan.io/address/0xaf88d065e77c8cC2239327C5EDb3A432268e5831>`_
         * ``GMX``: `0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a <https://arbiscan.io/address/0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a>`_
-    * oracles (price ratios to ``ARB`` from Chainlink prices):
+    * oracles (price ratios to ``RDNT`` from Chainlink prices):
         * ``WETH``: `0x0955c1FD089dea1929C2bD7176e08eE29fD92b4D <https://arbiscan.io/address/0x0955c1FD089dea1929C2bD7176e08eE29fD92b4D>`_
         * ``WBTC``: `0x7C3155653E0075F7dB75D9CAeA4B3D6bD39DdaE6 <https://arbiscan.io/address/0x7C3155653E0075F7dB75D9CAeA4B3D6bD39DdaE6>`_
         * ``ARB`` : `0xE31ea2670050F0F30Ca9c4217672675F2876F385 <https://arbiscan.io/address/0xE31ea2670050F0F30Ca9c4217672675F2876F385>`_
