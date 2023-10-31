@@ -7,7 +7,7 @@ The Crayon Protocol team decided not to host a front-end. There are two main rea
 
 To elaborate on this last point, Crayon Protocol's powerful pairs trading support is only accessible through deployed smart contracts including through integrations by other protocols. 
 
-A front-end does however make it possible to use the repo-style asset financing capabilities of the protocol and, for this reason, Crayon Protocol provides incentives to third-parties to provide a front-end. A third-party provider of a GUI, can register permissionlessly with the Crayon Protocol Control smart contract and keep a fraction of XCRAY token rewards earned by users of their GUI. The fraction of rewards is specified in the registration transaction. Further details about support for providers can be found in our docs.
+A front-end does however make it possible to use the repo-style asset financing capabilities of the protocol and, for this reason, Crayon Protocol provides incentives to third-parties to provide a front-end. A third-party provider of a GUI, can register permissionlessly with the Crayon Protocol Control smart contract and keep a fraction of `XCRAY` token rewards earned by users of their GUI. The fraction of rewards is specified in the registration transaction. Further details about support for providers can be found in our docs.
 
 This folder contains a basic web app that is integrated with the Crayon Protocol deployments on Arbitrum and Sepolia. This is beta software and for this reason access to Arbitrum One mainnet was disabled in the code. It can be used against a local fork of Arbitrum, however, in addition to Sepolia or a local fork of Sepolia.
 
@@ -20,7 +20,7 @@ To serve the app in your browser, you must:
 
 If your intention is to host the app and take advantage of the `XCRAY` rewards, then `network_provider_address` in the file must be set to the address to be credited with the fraction of rewards you keep. You must also register with the Control smart contract. 
 
-If you're running the app for your own use, `network_provider_address` can be set to the `null` addressed specified in the file.
+If you're running the app for your own use, `network_provider_address` can be set to the `null` address specified in the file.
 
 **Note**
 
