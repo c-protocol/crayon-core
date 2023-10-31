@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script type="text/javascript">
+            const app = {};
+            const web3 = {};
+        </script>
+        
+        <script type="module">
+            import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.6.0/ethers.min.js";
+            
+            if (typeof window.ethereum === 'undefined') {
+                console.error('you must install MetaMask')
+            } else {
+                window.ethereum.on('chainChanged', (chainId) => window.location.reload());
+
+                if (window.ethereum.chainId == 42161) {
+                    alert('This beta version of the GUI cannot be used with mainnet Arbitrum.\n\nUse it with Sepolia, a fork of Sepolia or a fork of Arbitrum.');
+                    web3.browserViewer = null;
+                    web3.browserSigner = null;
+                    web3.account = null;
+                } else {
+                    web3.browserViewer = new ethers.BrowserProvider(window.ethereum);
+                    let accounts = await web3.browserViewer.listAccounts();
+                    web3.browserSigner =  await web3.browserViewer.getSigner(accounts[0].address);
+                    web3.account = accounts[0];
+                }
+
+                window.ethereum.on('accountsChanged', 
+                    async (accounts) => {
+                        if (accounts.length === 0 || web3.browserViewer == null) {
+                            console.log('MetaMask not connected.')
+                        } else if (accounts[0] !== web3.account) {
+                            web3.account = accounts[0];
+                            web3.browserSigner =  await web3.browserViewer.getSigner(accounts[0].address);
+                        }
+                    });
+                
+                // next 3 lines for ganache-cli
+                // let browserViewer = new ethers.JsonRpcProvider();
+                // let accounts = await browserViewer.listAccounts();
+                // web3.account = accounts[0];
+            }
+
+            web3.ethers = ethers;
+        </script>
+
+        <script type="module">
+            import {update_parameters, fill_view, form_action, mint_action, reset_parameters, fill_desk_menu} from "./js/app.js";
+            app.update_parameters = update_parameters;
+            app.form_action = form_action;
+            app.mint_action = mint_action;
+            app.fill_view = fill_view;
+            app.reset_parameters = reset_parameters;
+            app.fill_desk_menu = fill_desk_menu;
+        </script>
+
+        <style>
+            body {
+                font-size: 85%;
+            }
+        </style>
+
+    </head>
+    
+    <body>
+        <div class="container-fluid my-1 py-1">
+            <img src="/img/c-protocol.png" style="height:40px; width: 40px;" class="rounded-pill">
+        </div>
+            
+        <div class="container my-3 py-3 ">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card bg-primary-subtle">
+                        <div class="card-body">
+                            <div class="form-floating mb-2">
+                                    <select class="form-select form-select-sm" id="network" onchange="app.fill_desk_menu()"></select>
+                                    <label for= "network">Network</label>
+                            </div>
+                            <div class="form-floating mb-2">
+                                    <select class="form-select form-select-sm" id="desk" onchange="app.fill_view(); app.reset_parameters()"></select>
+                                    <label for= "desk">Desk</label>
+                            </div>
+                            <div class="form-floating">
+                                    <select class="form-select form-select-sm" id="deskAction" onchange="app.update_parameters()">
+                                        <option value="blank"></option>
+                                        <optgroup label="Lender">
+                                            <option value="deposit">Deposit</option>
+                                            <option value="withdraw">Withdraw</option>
+                                        </optgroup>
+                                        <optgroup label="Trader">
+                                            <option value="borrow">Borrow</option>
+                                            <option value="repay">Repay</option>
+                                            <option value="extend">Extend</option>
+                                            <option value="addCollateral">Add Collateral</option>
+                                            <option value="withdrawCollateral">Withdraw Collateral</option>
+                                        </optgroup>
+                                    </select>
+                                    <label for= "deskAction">Action</label>
+                                <br><br>
+                            </div>
+
+                            <div id="callingSequence"></div>
+                            <br><br>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form action="javascript:app.form_action()">
+                                        <!-- <br><br> -->
+                                        <button class="btn btn-light border" type="submit">Submit Action</button>
+                                    </form>
+                                </div>
+                                <div class="col-lg-6">
+                                    <form action="javascript:app.mint_action()">
+                                        <button class="btn btn-light border" type="submit">Mint XCRAY</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card bg-primary-subtle">
+                        <div class="card-body">
+                            <form class="mb-2" action="javascript:app.fill_view()">
+                                <button class="btn btn-light border" id="refreshDeskData">Refresh Desk Data</button>
+                            </form>                            
+                            <br><br>
+                            <table class="table table-sm table-bordered table-striped">
+                                <caption class="caption-top">Base</caption>
+                                <tbody>
+                                    <tr>
+                                        <td id="base"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered table-striped">
+                                <caption class="caption-top">Desk Stats</caption>
+                                <tbody>
+                                    <tr>
+                                        <th>Base Liquidity</th>
+                                        <th>Base Borrowed</th>
+                                        <th>Base Reserved</th>
+                                    </tr>
+                                    <tr>
+                                        <td id="totalLiq"></td>
+                                        <td id="totalLoans"></td>
+                                        <td id="totalRes"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered table-striped">
+                                <caption class="caption-top">User Credits</caption>
+                                <tbody>
+                                    <tr>
+                                        <th>Base Deposited</th>
+                                        <th>Earned XCRAY</th>
+                                    </tr>
+                                    <tr>
+                                        <td id="userDeposit"></td>
+                                        <td id="earnedXcray"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered table-striped" id="userLoans">
+                                <caption class="caption-top">User Borrowed</caption>
+                                <thead>
+                                    <tr>
+                                        <th>Base Borrowed</th>
+                                        <th>Collateral Used</th>
+                                        <th>Collateral Amount</th>
+                                        <th>Expiration (block)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loansBody"></tbody>
+                            </table>
+                            <table class="table table-sm table-bordered table-striped" id="horizonFee">
+                                <caption class="caption-top">Desk Loan Horizons</caption>
+                                <thead>
+                                    <tr>
+                                        <th>Horizon (days)</th>
+                                        <th>Fee (bps)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="horizonsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
