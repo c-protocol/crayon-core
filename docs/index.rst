@@ -28,7 +28,7 @@ Unlike trade leveraging, asset financing assumes the assets are already held by 
 Interaction with the protocol
 =============================
 
-The Crayon Protocol team does not intend to build a front-end. Users can access the protocol through front-ends built by third-parties or through the more basic read/write contract features on etherscan.io (use links to contracts in the table below). 
+The Crayon Protocol team does not intend to host a front-end. Users can access the protocol through front-ends built by third-parties or through the more basic read/write contract features on etherscan.io (use links to contracts in the table below). Developers can run a front-end built by the Crayon team available from github repository `crayon-core <https://github.com/c-protocol/crayon-core/tree/main/frontend>`_.
 
 Features
 ========

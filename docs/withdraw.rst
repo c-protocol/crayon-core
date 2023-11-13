@@ -13,7 +13,7 @@ To withdraw base token deposited in the desk use ``withdraw``.
     Withdraw part/all of deposit
 
     * ``_amount``: The amount of base coin to be withdrawn
-    * ``_provider``: For use by front-end providers, if applicable
+    * ``_provider``: For use by front-end or other integration providers, if applicable
 
 .. note::
 

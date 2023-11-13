@@ -11,7 +11,7 @@ The following functions in the ``Control`` smart contract support the reward tok
 
 .. py:function:: mint_all_reward_token(_user: address)
     
-    Credit ``_user`` with all the reward tokens accumulated by ``_user`` on all the desks minus a percentage specified by the ``_user``'s front-end, or other service, provider.
+    Credit ``_user`` with all the reward tokens accumulated by ``_user`` on all the desks minus a percentage specified by the ``_user``'s front-end, or other integration, provider.
 
     * ``_user``: The address whose rewards are being claimed
 

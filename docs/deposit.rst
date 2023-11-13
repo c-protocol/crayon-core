@@ -12,7 +12,7 @@ Users deposit the desk's base token using the ``deposit`` function.
     Deposit base coin into the desk for lending.
 
     * ``_amount``: Amount of base coin being deposited
-    * ``_provider``: For use by front-end providers, if applicable
+    * ``_provider``: For use by front-end or other integration providers, if applicable
 
 .. note::
 

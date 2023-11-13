@@ -22,7 +22,7 @@ The two functions available for borrowing are:
     * ``_horizon``: If a new loan, the loan expires at the block height _horizon blocks hence
     * ``_contract``: The address of the smart contract receiving the loan and that will also provide the required _longable_amount of the longable token
     * ``data``: Opaque calldata to be passed to the smart contract receiving the loan
-    * ``_provider``: For use by third-party, front-end provider if applicable. Use default otherwise
+    * ``_provider``: For use by third-party, front-end or other integration provider if applicable. Use default otherwise
 
 .. note::
 
@@ -36,7 +36,7 @@ The two functions available for borrowing are:
     * ``_longable``: The address of the ERC20 token used as longable
     * ``_longable_amount``: Amount of longable being posted against the loan. Can be 0 if borrowing against longable already posted
     * ``_horizon``: If a new loan, the loan expires at the block height _horizon blocks hence
-    * ``_provider``: For use by third-party, front-end provider if applicable. Use default otherwise
+    * ``_provider``: For use by third-party, front-end or other integration provider if applicable. Use default otherwise
 
 .. note::
 
