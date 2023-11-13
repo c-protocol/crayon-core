@@ -9,7 +9,7 @@ Base tokens or tokens deposited by borrowers as collateral are available for fla
 
 .. note::
     
-    The flash loan is not charged any fee if the amount of base tokens or longable tokens does not exceed the amount of those tokens deposited by the calling smart contract.
+    The flash loan is not charged any fee if the amount of base tokens or longable tokens does not exceed the amount of those tokens deposited by the calling smart contract. This incentives Crayon lenders and borrowers to help with :ref:`liquidation <liquidation>` of bad loans by increasing the profitability of the resulting arbitrage trades.
 
 .. py:function:: flashloan(_amount: uint256, _token: address, _contract: address, data: Bytes[256])
 
