@@ -6,7 +6,7 @@
 Providers 
 #########
 
-The Crayon Protocol team decided to leave it to third parties to build front-ends to access the protocol's desks. Providers are incentivized by letting them specify and keep a percentage of reward tokens earned by their users. When minting reward tokens for a user, the protocol awards that percentage of the rewards to the provider the user used.
+The Crayon Protocol team decided to leave it to third parties to build front-ends to access the protocol's desks. Integration with Crayon can also benefit DEXes who can then source loans for leveraged trading on their platforms. Providers are incentivized by letting them specify and keep a percentage of reward tokens earned by their users. When minting reward tokens for a user, the protocol awards that percentage of the rewards to the provider the user used. DEXes integrating with Crayon also benefit by being able to flashloan collateral posted by their users at no cost.
 
 The following functions in the ``Control`` smart contract are available for provider interaction.
 
