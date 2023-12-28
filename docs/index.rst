@@ -25,6 +25,13 @@ Main advantages to asset financing
 
 Unlike trade leveraging, asset financing assumes the assets are already held by the borrower who wishes to obtain a loan. Crayon Protocol allows a more "repo-style" asset financing than traditional DeFi. Existing assets can be posted as collateral for a loan in some base token but, unlike traditional DeFi protocols, Crayon Protocol fixes the fee and the expiration date of the loan. This, again, allows for better cost predictions or PnL projections, depending on how the loan is used.
 
+Crayon as infrastructure
+========================
+
+The Crayon Protocol team envisions Crayon becoming DeFi infrastructure supporting Yield Aggregators and DEX'es. Yield Aggregators with ERC-4626 hooks can interact with an ERC-4626 wrapper to a Crayon desk instead of coding to the desk's API directly.
+
+DEX'es can integrate with Crayon Desks using bespoke smart contracts. This benefits the DEX and its users by allowing fully collateralized leveraged trading on the DEX. Contact the team for more info.
+
 Interaction with the protocol
 =============================
 
