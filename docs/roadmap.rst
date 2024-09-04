@@ -13,7 +13,7 @@ Milestones
 The most important current milestone on our roadmap is the deployment of the ``Governor`` smart contract which will transfer control of the Crayon Protocol desks to ``XCRAY`` holders.
 
 * **2023Q2**: Limited roll-out on Arbitrum. Start ``XCRAY`` token distribution to Arbitrum desks users.
-* **2023Q4**: 
+* **2024Q4**: 
 
     * Liquidity bootstrapping and ``XCRAY`` token sale
     * Crayon decentralized governance launch through ``Governor`` smart contract deployment.
