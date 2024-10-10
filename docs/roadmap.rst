@@ -10,11 +10,14 @@ The roll-out of the Crayon Protocol will follow these broad stages and timeframe
 Milestones
 ==========
 
-The most important current milestone on our roadmap is the deployment of the ``Governor`` smart contract which will transfer control of the Crayon Protocol desks to ``XCRAY`` holders.
+The most important milestones on our current roadmap are the deployment of the ``Governor`` smart contract which will transfer control of the Crayon Protocol desks to ``XCRAY`` holders and the support of RWA collateral on specialized desks in partnership with RWA issuers. The deployment of RWA support will be part of a v2 rollout of Crayon.
 
 * **2023Q2**: Limited roll-out on Arbitrum. Start ``XCRAY`` token distribution to Arbitrum desks users.
-* **2024Q4**: 
+* **2025**: 
 
     * Liquidity bootstrapping and ``XCRAY`` token sale
     * Crayon decentralized governance launch through ``Governor`` smart contract deployment.
 
+* **2025**:
+
+    * Crayon v2 with, in particular, support for RWA collateral.
